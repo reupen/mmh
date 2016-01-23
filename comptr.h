@@ -48,6 +48,11 @@ public:
 		}
 	}
 
+	void attach(T * p_Unk)
+	{
+		m_Unk = p_Unk;
+	}
+
 	template<class Q>
 	inline void copy(const comptr_t<Q> & p_source) {copy(p_source.get_ptr());}
 
