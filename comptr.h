@@ -15,10 +15,16 @@ public:
 	comptr_t()
 		: m_Unk(NULL) {};
 
-	inline comptr_t(const comptr_t <T> &p_source)
+	comptr_t(const comptr_t <T> & p_source)
 		 : m_Unk(NULL) 
 	{
 		copy(p_source);
+	}
+
+	comptr_t(comptr_t <T> && p_source)
+		: m_Unk(p_source.m_Unk)
+	{
+		p_source.m_Unk = NULL;
 	}
 
 	~comptr_t()
@@ -59,7 +65,8 @@ public:
 	T** get_pp() {release(); return &m_Unk;}
 	inline operator T* () {
 		//assert(m_Unk);  //sometimes you may want to pass a NULL pointer as a function parameter
-		return m_Unk;}
+		return m_Unk;
+	}
 
 	inline T* get_ptr() const {return m_Unk;}
 	inline bool is_valid() const {return m_Unk != 0;}
