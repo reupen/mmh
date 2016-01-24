@@ -22,8 +22,9 @@ public:
 	}
 
 	comptr_t(comptr_t <T> && p_source)
-		: m_Unk(p_source.m_Unk)
+		: m_Unk(nullptr)
 	{
+		m_Unk = p_source.m_Unk;
 		p_source.m_Unk = NULL;
 	}
 

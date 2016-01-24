@@ -192,7 +192,7 @@ void sha1_hmac(t_uint8 * key, t_size key_size, t_uint8 * msg, t_size msg_size, v
 	sha1_o.finialise(p_out);
 }
 
-	void sha1(const t_uint8 * p_data, t_uint64 p_data_size, void * p_out)
+	void sha1(const t_uint8 * p_data, t_size p_data_size, void * p_out)
 	{
 		sha1_generator::g_run(p_data, p_data_size, p_out);
 	}
