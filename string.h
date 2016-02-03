@@ -37,7 +37,7 @@ namespace mmh {
 		{
 			// Calculate number of digits safely.
 			t_size digits = 0;
-			t_size size_temp = size;
+			t_uint64 size_temp = size;
 
 			while (size_temp)
 			{
@@ -166,7 +166,8 @@ namespace mmh {
 				if (size < next) break;
 				scale = next; unit = unitTable[walk];
 			}
-			t_filesize major = (size / scale), minor = 0, minor_digits = 0;
+			t_filesize major = (size / scale), minor = 0;
+			t_size minor_digits = 0;
 
 			bool b_minor = major <= 99 && size;
 
