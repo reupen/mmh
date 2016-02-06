@@ -15,7 +15,10 @@ public:
 	comptr_t()
 		: m_Unk(NULL) {};
 
-	comptr_t(const comptr_t <T> & p_source)
+	comptr_t(const comptr_t <T> & p_source) = delete;
+
+	template <typename Q>
+	comptr_t(const comptr_t <Q> & p_source)
 		 : m_Unk(NULL) 
 	{
 		copy(p_source);
@@ -57,10 +60,11 @@ public:
 	template<class Q>
 	inline void copy(const comptr_t<Q> & p_source) {copy(p_source.get_ptr());}
 
-//	template<class Q>
-//	inline const comptr_t<T> & operator=(const comptr_t<Q> & p_Unk) {copy(p_Unk); return *this;}
+	comptr_t<T> & operator=(const comptr_t<T> & p_Unk) = delete;
+	comptr_t<T> & operator=(comptr_t<T> && p_Unk) = delete;
 
-	inline const comptr_t<T> & operator=(const comptr_t<T> & p_Unk) {copy(p_Unk); return *this;}
+	template<class Q>
+	inline const comptr_t<T> & operator=(const comptr_t<Q> & p_Unk) {copy(p_Unk); return *this;}
 
 	inline const comptr_t<T> & operator=(IUnknown * p_Unk) {copy(p_Unk); return *this;}
 
