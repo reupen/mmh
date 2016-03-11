@@ -8,18 +8,22 @@ class comptr_t
 {
 public:
 	comptr_t(IUnknown * pUnk)
-		: m_Unk(NULL)
+		: m_Unk(nullptr)
 	{
 		copy(pUnk);
 	}
 	comptr_t()
-		: m_Unk(NULL) {};
+		: m_Unk(nullptr) {};
 
-	comptr_t(const comptr_t <T> & p_source) = delete;
+	comptr_t(const comptr_t <T> & p_source)
+		: m_Unk(nullptr)
+	{
+		copy(p_source);
+	}
 
 	template <typename Q>
 	comptr_t(const comptr_t <Q> & p_source)
-		 : m_Unk(NULL) 
+		 : m_Unk(nullptr)
 	{
 		copy(p_source);
 	}
@@ -60,13 +64,18 @@ public:
 	template<class Q>
 	inline void copy(const comptr_t<Q> & p_source) {copy(p_source.get_ptr());}
 
-	comptr_t<T> & operator=(const comptr_t<T> & p_Unk) = delete;
-	comptr_t<T> & operator=(comptr_t<T> && p_Unk) = delete;
+	comptr_t<T> & operator=(const comptr_t<T> & p_Unk) { copy(p_Unk); return *this; }
+	
+	comptr_t<T> & operator=(comptr_t<T> && p_Other) {
+		m_Unk = p_Other.m_Unk;
+		p_Other.m_Unk = nullptr;
+		return *this;
+	}
 
 	template<class Q>
-	inline const comptr_t<T> & operator=(const comptr_t<Q> & p_Unk) {copy(p_Unk); return *this;}
+	inline comptr_t<T> & operator=(const comptr_t<Q> & p_Unk) {copy(p_Unk); return *this;}
 
-	inline const comptr_t<T> & operator=(IUnknown * p_Unk) {copy(p_Unk); return *this;}
+	inline comptr_t<T> & operator=(IUnknown * p_Unk) {copy(p_Unk); return *this;}
 
 	inline T* operator->() const {assert(m_Unk);return m_Unk;}
 
