@@ -15,14 +15,14 @@ namespace mmh {
 		t_size len_max = min(wcslen(str_utf16), len);
 		if (len_max)
 		{
-			int size_ascii = WideCharToMultiByte(20127, NULL, str_utf16, len_max, NULL, NULL, replacement, NULL);
+			int size_ascii = WideCharToMultiByte(20127, NULL, str_utf16, len_max, nullptr, NULL, replacement, nullptr);
 			if (!size_ascii)
 				throw exception_win32(GetLastError());
 
 			pfc::array_t<char> str_ascii;
 			str_ascii.set_size(size_ascii + 1);
 			str_ascii.fill_null();
-			int ret = WideCharToMultiByte(20127, NULL, str_utf16, len_max, str_ascii.get_ptr(), size_ascii, replacement, NULL);
+			int ret = WideCharToMultiByte(20127, NULL, str_utf16, len_max, str_ascii.get_ptr(), size_ascii, replacement, nullptr);
 			if (!ret)
 				throw exception_win32(GetLastError());
 			p_out.set_string(str_ascii.get_ptr(), size_ascii);

@@ -6,7 +6,7 @@ namespace mmh {
 		void create_thread()
 		{
 			if (!m_thread)
-				m_thread = CreateThread(NULL, NULL, &g_threadproc, (LPVOID)this, NULL, NULL);
+				m_thread = CreateThread(nullptr, NULL, &g_threadproc, (LPVOID)this, NULL, nullptr);
 		}
 		void on_destroy_thread()
 		{
@@ -14,7 +14,7 @@ namespace mmh {
 			{
 				WaitForSingleObject(m_thread, 10 * 1000);
 				CloseHandle(m_thread);
-				m_thread = NULL;
+				m_thread = nullptr;
 			}
 		}
 		HANDLE get_thread() { return m_thread; }
@@ -23,11 +23,11 @@ namespace mmh {
 			if (m_thread)
 			{
 				CloseHandle(m_thread);
-				m_thread = NULL;
+				m_thread = nullptr;
 			}
 		}
 		virtual DWORD on_thread() = 0;
-		thread_t() : m_thread(NULL) {};
+		thread_t() : m_thread(nullptr) {};
 
 		virtual ~thread_t() {};
 	private:
@@ -44,12 +44,12 @@ namespace mmh {
 		void create_thread()
 		{
 			if (!m_thread)
-				m_thread = CreateThread(NULL, NULL, &g_on_thread, (LPVOID)this, NULL, NULL);
+				m_thread = CreateThread(nullptr, NULL, &g_on_thread, (LPVOID)this, NULL, nullptr);
 		}
 		void set_priority(int priority)
 		{
 			m_priority = priority;
-			if (m_thread != NULL)
+			if (m_thread != nullptr)
 				SetThreadPriority(m_thread, m_priority);
 		}
 		bool wait_for_thread(DWORD timeout = pfc_infinite)
@@ -65,10 +65,10 @@ namespace mmh {
 			wait_for_thread(timeout);
 			release_thread();
 		}
-		bool is_thread_open() { return m_thread != NULL; }
+		bool is_thread_open() { return m_thread != nullptr; }
 		HANDLE get_thread() { return m_thread; }
 		virtual DWORD on_thread() = 0;
-		thread_v2_t() : m_thread(NULL), m_priority(THREAD_PRIORITY_NORMAL) {};
+		thread_v2_t() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL) {};
 
 		virtual ~thread_v2_t() {};
 
@@ -77,7 +77,7 @@ namespace mmh {
 			if (m_thread)
 			{
 				CloseHandle(m_thread);
-				m_thread = NULL;
+				m_thread = nullptr;
 			}
 		}
 

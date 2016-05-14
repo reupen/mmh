@@ -101,7 +101,7 @@ public:
 		pfc::swap_t(item1.m_Unk,item2.m_Unk);
 	}
 
-	HRESULT instantiate(REFCLSID rclsid, LPUNKNOWN pUnkOuter = NULL, DWORD dwClsContext = CLSCTX_ALL) throw()
+	HRESULT instantiate(REFCLSID rclsid, LPUNKNOWN pUnkOuter = nullptr, DWORD dwClsContext = CLSCTX_ALL) throw()
 	{
 		return CoCreateInstance(rclsid, pUnkOuter, dwClsContext, __uuidof(T), *this);
 	}
