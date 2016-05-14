@@ -29,7 +29,7 @@ namespace mmh {
 		virtual DWORD on_thread() = 0;
 		thread_t() : m_thread(nullptr) {};
 
-		virtual ~thread_t() {};
+		virtual ~thread_t() = default;;
 	private:
 		static DWORD CALLBACK g_threadproc(LPVOID lpThreadParameter)
 		{
@@ -70,7 +70,7 @@ namespace mmh {
 		virtual DWORD on_thread() = 0;
 		thread_v2_t() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL) {};
 
-		virtual ~thread_v2_t() {};
+		virtual ~thread_v2_t() = default;;
 
 		void release_thread()
 		{
