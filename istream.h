@@ -113,7 +113,7 @@ public:
 		return S_OK;
 	}
 
-	virtual HRESULT STDMETHODCALLTYPE Revert( void)
+	virtual HRESULT STDMETHODCALLTYPE Revert( )
 	{
 		return E_FAIL;
 	}
