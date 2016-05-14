@@ -11,13 +11,13 @@ namespace mmh
 template<typename t_receiver>
 class completion_notify_copyptr : public completion_notify_orphanable {
 public:
-	void on_completion(unsigned p_code) {
+	void on_completion(unsigned p_code) override {
 		if (m_receiver != NULL) {
 			m_receiver->on_task_completion(m_taskid,p_code);
 		}
 	}
 	void setup(t_receiver p_receiver, unsigned p_task_id) {m_receiver = p_receiver; m_taskid = p_task_id;}
-	void orphan() {m_receiver = NULL; m_taskid = 0;}
+	void orphan() override {m_receiver = NULL; m_taskid = 0;}
 private:
 	t_receiver m_receiver;
 	unsigned m_taskid;
