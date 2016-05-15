@@ -32,7 +32,7 @@ public:
 		: m_Unk(nullptr)
 	{
 		m_Unk = p_source.m_Unk;
-		p_source.m_Unk = NULL;
+		p_source.m_Unk = nullptr;
 	}
 
 	~comptr_t()
@@ -44,7 +44,7 @@ public:
 		if (m_Unk)
 		{
 			m_Unk->Release();
-			m_Unk=NULL;
+			m_Unk=nullptr;
 		}
 	}
 	inline void copy(IUnknown * p_Unk)
@@ -88,7 +88,7 @@ public:
 	}
 
 	inline T* get_ptr() const {return m_Unk;}
-	inline bool is_valid() const {return m_Unk != 0;}
+	inline bool is_valid() const {return m_Unk != nullptr;}
 	inline bool is_empty() const {return m_Unk == 0;}
 
 	inline bool operator==(const comptr_t<T> & p_item) const {return m_Unk == p_item.m_Unk;}
