@@ -19,7 +19,7 @@ namespace mmh
 			static bool ret = IsWindowsXPOrGreater();
 			return ret;
 		}
-		bool test_osversion(DWORD major, DWORD minor, WORD sp)
+		bool test_osversion(WORD major, WORD minor, WORD sp)
 		{
 			return IsWindowsVersionOrGreater(major, minor, sp);
 		}
