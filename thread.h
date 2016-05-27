@@ -93,4 +93,5 @@ namespace mmh {
 		int m_priority;
 	};
 
+	size_t get_cpu_core_count();
 }
