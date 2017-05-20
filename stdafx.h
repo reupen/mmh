@@ -21,7 +21,6 @@
 #include "stream.h"
 #include "istream.h"
 #include "comptr.h"
-#include "completion_notify.h"
 #include "sha1.h"
 #include "rand.h"
 #include "initquit.h"

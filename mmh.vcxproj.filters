@@ -22,7 +22,6 @@
     <ClInclude Include="sha1.h">
       <Filter>SHA-1</Filter>
     </ClInclude>
-    <ClInclude Include="completion_notify.h" />
     <ClInclude Include="comptr.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="initquit.h" />

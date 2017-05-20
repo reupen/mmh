@@ -161,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sha1.h" />
-    <ClInclude Include="completion_notify.h" />
     <ClInclude Include="comptr.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="initquit.h" />
