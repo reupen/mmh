@@ -10,8 +10,6 @@
       <Filter>SHA-1</Filter>
     </ClCompile>
     <ClCompile Include="comptr.cpp" />
-    <ClCompile Include="initquit.cpp" />
-    <ClCompile Include="library.cpp" />
     <ClCompile Include="osversion.cpp" />
     <ClCompile Include="sort.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -24,14 +22,11 @@
     </ClInclude>
     <ClInclude Include="comptr.h" />
     <ClInclude Include="exception.h" />
-    <ClInclude Include="initquit.h" />
     <ClInclude Include="istream.h" />
-    <ClInclude Include="library.h" />
     <ClInclude Include="osversion.h" />
     <ClInclude Include="rand.h" />
     <ClInclude Include="sort.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="stream.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
   </ItemGroup>

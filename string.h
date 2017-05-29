@@ -166,14 +166,14 @@ namespace mmh {
 				if (size < next) break;
 				scale = next; unit = unitTable[walk];
 			}
-			t_filesize major = (size / scale), minor = 0;
+			uint64_t major = (size / scale), minor = 0;
 			t_size minor_digits = 0;
 
 			bool b_minor = major <= 99 && size;
 
-			t_filesize remainder_raw = size % scale; t_size i = 0, j;
+			uint64_t remainder_raw = size % scale; t_size i = 0, j;
 
-			t_filesize remainder = (remainder_raw * 1000) / scale;
+			uint64_t remainder = (remainder_raw * 1000) / scale;
 
 			//while (remainder > poweroften(i)) i++;
 			//if (i) i--;

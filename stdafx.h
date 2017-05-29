@@ -1,28 +1,18 @@
-#ifndef _MMH_HELPERS_H_
-#define _MMH_HELPERS_H_
+#pragma once
 
-#include <string>
+#include <assert.h>
+
 #include <windows.h>
-#include <WindowsX.h>
-#include <SHLWAPI.H>
 #include <VersionHelpers.h>
 
 #include "../pfc/pfc.h"
-#include "../foobar2000/shared/shared.h"
-
-#include "../foobar2000/SDK/foobar2000.h"
 
 #include "osversion.h"
 #include "exception.h"
-#include "library.h"
 #include "sort.h"
 #include "string.h"
 #include "thread.h"
-#include "stream.h"
 #include "istream.h"
 #include "comptr.h"
 #include "sha1.h"
 #include "rand.h"
-#include "initquit.h"
-
-#endif
