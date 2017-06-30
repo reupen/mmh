@@ -66,7 +66,7 @@ public:
 		/* [in] */ ULONG cb,
 		/* [out] */ ULONG *pcbRead)
 	{
-		t_size read = min (cb, m_data.get_size() - m_position);
+		t_size read = (std::min)(static_cast<unsigned>(cb), m_data.get_size() - m_position);
 		memcpy(pv, &m_data.get_ptr()[m_position], read);
 		m_position += read;
 		if (pcbRead)
@@ -96,7 +96,7 @@ public:
 	{
 		if (cb.QuadPart > m_data.get_size() - m_position)
 			return STG_E_INVALIDFUNCTION;
-		t_size read = min ((t_size)cb.QuadPart, m_data.get_size() - m_position);
+		t_size read = (std::min)((t_size)cb.QuadPart, m_data.get_size() - m_position);
 		ULONG pwritten = NULL;
 		pstm->Write(&m_data.get_ptr()[m_position], read, &pwritten);
 		m_position += read;
