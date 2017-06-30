@@ -79,8 +79,24 @@ namespace mmh {
 	};
 
 #endif
-	const char * g_convert_utf16_to_ascii(const WCHAR * str_utf16, t_size len, pfc::string_base & p_out);
-	const char * g_convert_utf8_to_ascii(const char * p_source, pfc::string_base & p_out);
+	const char * g_convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
+	const char * g_convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
+    /**
+     * \brief Partially compares two UTF-8 strings.
+     * 
+     * Replacement for stricmp_utf8_partial in shared.dll (based on similar functions in pfc).
+     * 
+     * If the substring is shorter than the main string, and the two strings are equal until that point,
+     * they are considered equal for the purposes of this function. Otherwise, this functions like a 
+     * normal case-insensitive string comparison.
+     * 
+     * \param str       The main string being checked against a substring
+     * \param substr    The substring to compare the main string with
+     * \return          0 if considered equal
+     *                  -1 if str < substr
+     *                  1 if str > substr
+     */
+    int compare_string_partial_case_insensitive(const char* str, const char* substr);
 
 	char format_digit(unsigned p_val);
 

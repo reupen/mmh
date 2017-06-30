@@ -43,4 +43,30 @@ namespace mmh {
 		PFC_ASSERT(p_val < 16);
 		return (p_val < 10) ? p_val + '0' : p_val - 10 + 'A';
 	}
+
+    int compare_string_partial_case_insensitive(const char* str, const char* substr) 
+    {
+        for (;;) {
+            uint32_t char1{};
+            uint32_t char2{};
+
+            const auto dec_bytes_1 = pfc::utf8_decode_char(str, char1);
+            const auto dec_bytes_2 = pfc::utf8_decode_char(substr, char2);
+
+            char1 = pfc::charLower(char1); 
+            char2 = pfc::charLower(char2);
+            
+            if (char2 == 0)
+                return 0;
+            if (char1 < char2)
+                return -1;
+            if (char1 > char2)
+                return 1;
+            // Carry on, as char1 == char2, and char2 != 0
+            
+            str += dec_bytes_1;
+            substr += dec_bytes_2;
+        }
+    }
+
 }
