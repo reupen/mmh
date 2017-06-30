@@ -30,4 +30,10 @@
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include="COPYING" />
+    <None Include="COPYING.LESSER" />
+    <None Include="COPYRIGHT" />
+  </ItemGroup>
 </Project>
