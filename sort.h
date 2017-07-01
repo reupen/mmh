@@ -6,7 +6,6 @@
 #define uTS(x,s) (pfc::stringcvt::string_os_from_utf8(x,s).get_ptr())
 #endif
 
-
 namespace mmh
 {
 	typedef pfc::list_t<t_size> permutation_base_t;
@@ -98,7 +97,7 @@ namespace mmh
 		};
 	};
 
-	__forceinline int g_compare_context(void* context, const void * item1, const void* item2);
+	int g_compare_context(void* context, const void * item1, const void* item2);
 
 	template <typename context_t>
 	__forceinline int g_compare_context_v2(context_t & context, const void * item1, const void* item2)
