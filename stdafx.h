@@ -9,6 +9,7 @@
 
 #include "osversion.h"
 #include "exception.h"
+#include "module.h"
 #include "sort.h"
 #include "string.h"
 #include "thread.h"

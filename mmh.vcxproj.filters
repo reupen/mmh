@@ -29,6 +29,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
+    <ClInclude Include="module.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
