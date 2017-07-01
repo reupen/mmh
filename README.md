@@ -4,4 +4,4 @@ mmh is a helper library containing various non-UI helper classes and functions (
  
 It is used by my foobar2000 components.
 
-The library is released under the Lesser GNU Public Licence (see COPYING and COPYING.LESSER).
+The library is released under the 3-Clause BSD licence (see LICENCE).
