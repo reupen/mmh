@@ -1,16 +1,9 @@
-#ifndef _MMH_SORT_H_
-#define _MMH_SORT_H_
-
-#ifndef uT
-#define uT(x) (pfc::stringcvt::string_os_from_utf8(x).get_ptr())
-#define uTS(x,s) (pfc::stringcvt::string_os_from_utf8(x,s).get_ptr())
-#endif
+#pragma once
 
 namespace mmh
 {
-    typedef pfc::list_t<t_size> permutation_base_t;
+    using permutation_base_t = pfc::list_t<t_size>;
 
-    //template <template<typename> class t_alloc = pfc::alloc_fast>
     class permutation_t : public permutation_base_t
     {
     public:
@@ -28,12 +21,12 @@ namespace mmh
             for (j=0; j<count; j++)
                 ptr[j] = count-j-1;
         }
-        void set_size (t_size size)
+        void set_size(t_size size)
         {
             pfc::list_t<t_size>::set_size(size);
             reset();
         }
-        void set_count (t_size size)
+        void set_count(t_size size)
         {
             set_size(size);
         };
@@ -71,173 +64,36 @@ namespace mmh
         }
     };
 
-    class sort_base
+    template <typename List, typename Comparator>
+    class ComparatorWrapper
     {
+        Comparator m_compare;
+        List& m_list;
+        bool m_reverse;
     public:
-        virtual int compare (const void * item1, const void* item2)=0;
-    };
-
-    template <typename t_list, typename t_compare>
-    class sort_base_impl : public sort_base
-    {
-        t_compare m_compare;
-        permutation_t & m_perm;
-        t_list & m_list;
-        bool m_stabilise;
-    public:
-        int compare (const void * item1, const void* item2) override
+        bool operator()(const t_size& item1, const t_size& item2) const
         {
-            int ret = m_compare(m_list[*(t_size*)(item1)], m_list[*(t_size*)(item2)]);
-            if (!ret && m_stabilise) ret = pfc::compare_t(*(t_size*)(item1), *(t_size*)(item2));
-            return ret;
+            int diff = m_compare(m_list[item1], m_list[item2]);
+            return m_reverse ? diff>0 : diff<0;
         }
-        sort_base_impl(t_list & p_list, permutation_t & p_perm, t_compare p_compare, bool p_stabilise)
-            : m_compare(p_compare), m_perm(p_perm), m_list(p_list), m_stabilise(p_stabilise)
-        {
-        };
+        ComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse)
+            : m_compare(p_compare), m_list(p_list), m_reverse(b_reverse) {}
     };
 
-    int g_compare_context(void* context, const void * item1, const void* item2);
-
-    template <typename context_t>
-    __forceinline int g_compare_context_v2(context_t & context, const void * item1, const void* item2)
-    {
-        return context.compare(item1, item2);
-    }
-
-    template <typename context_t>
-    __forceinline int g_compare_context_v3(context_t & context, const t_size * item1, const t_size* item2)
-    {
-        return context.compare(item1, item2);
-    }
-
-    template <typename context_t>
-    __forceinline bool g_compare_context_v2_lt(context_t & context, const void * item1, const void* item2)
-    {
-        return context.compare(item1, item2)<0;
-    }
-
-    template <typename t_list, typename t_compare>
-    void g_sort_get_permutation_qsort(t_list & p_list, permutation_t & p_out, t_compare p_compare, bool stabilise)
-    {
-        t_size size = pfc::array_size_t(p_list);
-        sort_base_impl<t_list, t_compare> p_context(p_list, p_out, p_compare, stabilise);
-        qsort_s(p_out.get_ptr(), size, sizeof(t_size), g_compare_context, static_cast<sort_base*>(&p_context));
-    }
-
-    template <typename t_item, typename t_compare>
-    class sort_base_impl_v2 : public sort_base
-    {
-        t_compare m_compare;
-        permutation_t & m_perm;
-        t_item * m_list;
-        bool m_stabilise, m_reverse;
-    public:
-        int compare (const void * item1, const void* item2) override
-        {
-            int ret = m_compare(m_list[*(t_size*)(item1)], m_list[*(t_size*)(item2)]);
-            if (m_reverse)
-                ret = -ret;
-            if (!ret && m_stabilise) ret = pfc::compare_t(*(t_size*)(item1), *(t_size*)(item2));
-            return ret;
-        }
-        sort_base_impl_v2(t_item * p_list, permutation_t & p_perm, t_compare p_compare, bool p_stabilise, bool b_reverse)
-            : m_compare(p_compare), m_perm(p_perm), m_list(p_list), m_stabilise(p_stabilise), m_reverse(b_reverse)
-        {
-        };
-    };
-
-    template <typename t_item, typename t_compare>
-    class sort_base_impl_v3
-    {
-        t_compare m_compare;
-        permutation_t & m_perm;
-        t_item * m_list;
-        bool m_stabilise, m_reverse;
-    public:
-        __forceinline int compare (const void * item1, const void* item2)
-        {
-            int ret = m_compare(m_list[*(t_size*)(item1)], m_list[*(t_size*)(item2)]);
-            if (m_reverse)
-                ret = -ret;
-            if (!ret && m_stabilise) ret = pfc::compare_t(*(t_size*)(item1), *(t_size*)(item2));
-            return ret;
-        }
-        sort_base_impl_v3(t_item * p_list, permutation_t & p_perm, t_compare p_compare, bool p_stabilise, bool b_reverse)
-            : m_compare(p_compare), m_perm(p_perm), m_list(p_list), m_stabilise(p_stabilise), m_reverse(b_reverse)
-        {
-        };
-    };
-
-    template <typename t_item, typename t_compare, bool b_stabilise, bool b_reverse>
-    class sort_base_impl_v4
-    {
-        t_compare m_compare;
-        permutation_t & m_perm;
-        t_item * m_list;
-    public:
-        __forceinline int compare (const t_size * item1, const t_size * item2)
-        {
-            int ret = m_compare(m_list[*item1], m_list[*item2]);
-            if (b_reverse)
-                ret = -ret;
-            if (b_stabilise && !ret) ret = pfc::compare_t(*item1, *item2);
-            return ret;
-        }
-        sort_base_impl_v4(t_item * p_list, permutation_t & p_perm, t_compare p_compare)
-            : m_compare(p_compare), m_perm(p_perm), m_list(p_list)
-        {
-        };
-    };
-
-    template <typename t_item, typename t_compare>
-    void g_sort_get_permutation_qsort_v2(t_item * p_items, permutation_t & p_out, t_compare p_compare, bool stabilise, bool b_reverse = false)
+    template <typename List, typename Comparator>
+    void sort_get_permuation(List&& p_items, permutation_t& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false)
     {
         t_size psize = pfc::array_size_t(p_out);
-        sort_base_impl_v2<t_item, t_compare> p_context(p_items, p_out, p_compare, stabilise, b_reverse);
-        qsort_s(p_out.get_ptr(), psize, sizeof(t_size), &g_compare_context, (void*)&p_context);
-        {
-            //t_size * ptr = p_out.get_ptr();
-            //_qsort_s(ptr, psize, sizeof(t_size), (g_compare_context_v2< sort_base_impl_v3<t_item, t_compare> >), p_context);
-            //QSORT(t_size, ptr, psize, (g_compare_context_v2_lt< sort_base_impl_v3<t_item, t_compare> >), p_context);
-        }
-    }
-
-    template <typename t_item, typename t_compare>
-    void g_sort_qsort_v2(t_item * p_items, t_size count, t_compare p_compare, bool stabilise, bool b_reverse = false)
-    {
-        const t_size psize = count;
-        permutation_t permutation(psize);
-        sort_base_impl_v2<t_item, t_compare> p_context(p_items, permutation, p_compare, stabilise, b_reverse);
-        qsort_s(permutation.get_ptr(), psize, sizeof(t_size), &g_compare_context, (void*)&p_context);
-        pfc::reorder_t(p_items, permutation.get_ptr(), psize);
-        {
-            //t_size * ptr = p_out.get_ptr();
-            //_qsort_s(ptr, psize, sizeof(t_size), (g_compare_context_v2< sort_base_impl_v3<t_item, t_compare> >), p_context);
-            //QSORT(t_size, ptr, psize, (g_compare_context_v2_lt< sort_base_impl_v3<t_item, t_compare> >), p_context);
-        }
-    }
-
-    template <bool b_stabilise, bool b_reverse, typename t_item, typename t_compare>
-    __forceinline void g_sort_get_permutation_qsort_v3(t_item * p_items, permutation_t & p_out, t_compare p_compare)
-    {
-        t_size psize = pfc::array_size_t(p_out);
-        sort_base_impl_v3<t_item, t_compare> p_context(p_items, p_out, p_compare, b_stabilise, b_reverse);
-        crtsort::qsort_s(p_out.get_ptr(), psize, sizeof(t_size), g_compare_context_v3< sort_base_impl_v4<t_item, t_compare, b_stabilise, b_reverse> >, p_context);
-        {
-            //t_size * ptr = p_out.get_ptr();
-            //_qsort_s(ptr, psize, sizeof(t_size), (g_compare_context_v2< sort_base_impl_v3<t_item, t_compare> >), p_context);
-            //QSORT(t_size, ptr, psize, (g_compare_context_v2_lt< sort_base_impl_v3<t_item, t_compare> >), p_context);
-        }
-    }
-
-    #define g_sort_get_permutation_qsort_v4(item_type_t, p_items, p_out, p_compare, stabilise, b_reverse) \
-    { \
-        _qsort_s(p_out.get_ptr(), pfc::array_size_t(p_out), 1, p_compare, item_type_t, p_items); \
+        t_size* out_ptr = p_out.get_ptr();
+        ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
+        if (stabilise)
+            std::stable_sort(out_ptr, out_ptr + psize, p_context);
+        else
+            std::sort(out_ptr, out_ptr + psize, p_context);
     }
 
     template <typename t_item, template<typename> class t_alloc, typename t_compare>
-    void g_list_remove_duplicates(pfc::list_t<t_item, t_alloc> & p_handles, t_compare p_compare)
+    void remove_duplicates(pfc::list_t<t_item, t_alloc>& p_handles, t_compare p_compare)
     {
         t_size count = p_handles.get_count();
         if (count>0)
@@ -246,7 +102,7 @@ namespace mmh
             bit_array_bittable mask(count);
             permutation_t order(count);
 
-            g_sort_get_permutation_qsort_v2(p_list, order, p_compare, false, false);
+            sort_get_permuation(p_list, order, p_compare, false, false);
             
             t_size n;
             bool found = false;
@@ -327,5 +183,3 @@ namespace mmh
 #endif
 
 }
-
-#endif //_MMH_SORT_H_
