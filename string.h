@@ -2,35 +2,10 @@
 
 namespace mmh {
 
-#if 0
-    // Meh. This things always formats with decimal places (unless you pass a custom NUMBERFMT which means bypassing the user's own settings anyway).
-    class format_integer : public pfc::stringcvt::string_utf8_from_wide {
-    public:
-        format_integer(t_uint64 number)
-        {
-            wchar_t buffer[65] = { 0 };
-
-            if (!_ui64tow_s(number, buffer, tabsize(buffer), 10))
-            {
-                int size = GetNumberFormat(LOCALE_USER_DEFAULT, 0, buffer, NULL, NULL, 0);
-
-                if (size > 0)
-                {
-                    pfc::array_t<wchar_t> formatted;
-                    formatted.set_size((t_size)size);
-                    formatted.fill_null();
-
-                    if (GetNumberFormat(LOCALE_USER_DEFAULT, 0, buffer, NULL, formatted.get_ptr(), size))
-                    {
-                        convert(formatted.get_ptr(), formatted.get_size());
-                    }
-                }
-            }
-
-        }
-    };
-
-#else
+    /**
+     * Note: GetNumberFormat is not used as it will format with decimal places (unless a custom
+     * NUMBERFMT is passed, which means bypassing the user's own settings anyway).
+     */
     class format_integer : public pfc::string_formatter {
     public:
         format_integer(t_uint64 size)
@@ -78,7 +53,6 @@ namespace mmh {
         }
     };
 
-#endif
     const char * g_convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
     const char * g_convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
     /**
@@ -129,12 +103,9 @@ namespace mmh {
                     strcpy_s(m_buffer, "eight");
                 else if (p_val == 9)
                     strcpy_s(m_buffer, "nine");
-                //else if (p_val == 10)
-                //strcpy_s(m_buffer, "ten");
             }
             else
             {
-
                 if (p_width > max_width) p_width = max_width;
                 else if (p_width == 0) p_width = 1;
 
@@ -158,9 +129,9 @@ namespace mmh {
                 *out = 0;
             }
         }
-        inline const char * get_ptr() const { return m_buffer; }
-        inline const char * toString() const { return m_buffer; }
-        inline operator const char*() const { return m_buffer; }
+        const char * get_ptr() const { return m_buffer; }
+        const char * toString() const { return m_buffer; }
+        operator const char*() const { return m_buffer; }
         bool is_plural() { return m_value != 1; }
     private:
         char m_buffer[64];
