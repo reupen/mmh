@@ -86,14 +86,14 @@ namespace mmh
 
     template <typename List, typename Comparator>
     void sort_get_permuation(List&& p_items, permutation_t& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
-                             bool allow_parallelisation = false, size_t parallel_chunk_size = 1024)
+                             bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
         t_size psize = pfc::array_size_t(p_out);
         t_size* out_ptr = p_out.get_ptr();
         if (allow_parallelisation && psize >= parallel_chunk_size) {
             // C++17 has parallel sort, but it is not implemented in VC2017 yet.
             ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
-            concurrency::parallel_sort(out_ptr, out_ptr + psize, p_context);
+            concurrency::parallel_buffered_sort(out_ptr, out_ptr + psize, p_context, parallel_chunk_size);
         } 
         else {
             ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
