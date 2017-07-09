@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <assert.h>
+#include <ppl.h>
 
 #include <windows.h>
 #include <VersionHelpers.h>

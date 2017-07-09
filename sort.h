@@ -67,29 +67,41 @@ namespace mmh
     template <typename List, typename Comparator>
     class ComparatorWrapper
     {
-        Comparator m_compare;
+        Comparator& m_compare;
         List& m_list;
         bool m_reverse;
+        bool m_stabilise;
     public:
         bool operator()(const t_size& item1, const t_size& item2) const
         {
             int diff = m_compare(m_list[item1], m_list[item2]);
+            if (m_stabilise && !diff)
+                return item1 < item2;
             return m_reverse ? diff>0 : diff<0;
         }
-        ComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse)
-            : m_compare(p_compare), m_list(p_list), m_reverse(b_reverse) {}
+        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
+        ComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse, bool stabilise = false)
+            : m_compare(p_compare), m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise}  {}
     };
 
     template <typename List, typename Comparator>
-    void sort_get_permuation(List&& p_items, permutation_t& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false)
+    void sort_get_permuation(List&& p_items, permutation_t& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
+                             bool allow_parallelisation = false, size_t parallel_chunk_size = 1024)
     {
         t_size psize = pfc::array_size_t(p_out);
         t_size* out_ptr = p_out.get_ptr();
-        ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
-        if (stabilise)
-            std::stable_sort(out_ptr, out_ptr + psize, p_context);
-        else
-            std::sort(out_ptr, out_ptr + psize, p_context);
+        if (allow_parallelisation && psize >= parallel_chunk_size) {
+            // C++17 has parallel sort, but it is not implemented in VC2017 yet.
+            ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
+            concurrency::parallel_sort(out_ptr, out_ptr + psize, p_context);
+        } 
+        else {
+            ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
+            if (stabilise)
+                std::stable_sort(out_ptr, out_ptr + psize, p_context);
+            else
+                std::sort(out_ptr, out_ptr + psize, p_context);
+        }
     }
 
     template <typename t_item, template<typename> class t_alloc, typename t_compare>
