@@ -9,7 +9,7 @@ namespace mmh {
         return ret;
     }
 
-    const char * g_convert_utf16_to_ascii(const WCHAR * str_utf16, t_size len, pfc::string_base & p_out)
+    const char * convert_utf16_to_ascii(const WCHAR * str_utf16, t_size len, pfc::string_base & p_out)
     {
         char * replacement = "_";
         t_size len_max = min(wcslen(str_utf16), len);
@@ -31,10 +31,10 @@ namespace mmh {
         return p_out.get_ptr();
     }
 
-    const char * g_convert_utf8_to_ascii(const char * p_source, pfc::string_base & p_out)
+    const char * convert_utf8_to_ascii(const char * p_source, pfc::string_base & p_out)
     {
         pfc::stringcvt::string_wide_from_utf8 str_utf16(p_source);
-        g_convert_utf16_to_ascii(str_utf16, pfc_infinite, p_out);
+        convert_utf16_to_ascii(str_utf16, pfc_infinite, p_out);
         return p_out.get_ptr();
     }
 

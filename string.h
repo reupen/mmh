@@ -6,9 +6,9 @@ namespace mmh {
      * Note: GetNumberFormat is not used as it will format with decimal places (unless a custom
      * NUMBERFMT is passed, which means bypassing the user's own settings anyway).
      */
-    class format_integer : public pfc::string_formatter {
+    class IntegerFormatter : public pfc::string_formatter {
     public:
-        format_integer(t_uint64 size)
+        IntegerFormatter(t_uint64 size)
         {
             // Calculate number of digits safely.
             t_size digits = 0;
@@ -53,8 +53,8 @@ namespace mmh {
         }
     };
 
-    const char * g_convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
-    const char * g_convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
+    const char * convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
+    const char * convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
     /**
      * \brief Partially compares two UTF-8 strings.
      * 
@@ -74,9 +74,9 @@ namespace mmh {
 
     char format_digit(unsigned p_val);
 
-    class format_uint_natural {
+    class UIntegerNaturalFormatter {
     public:
-        format_uint_natural(t_uint64 p_val, unsigned p_width = 0, unsigned p_base = 10)
+        UIntegerNaturalFormatter(t_uint64 p_val, unsigned p_width = 0, unsigned p_base = 10)
             : m_value(p_val)
         {
             enum { max_width = tabsize(m_buffer) - 1 };
@@ -140,9 +140,9 @@ namespace mmh {
 
     t_size poweroften(t_size raiseTo);
 
-    class format_file_size : public pfc::string_formatter {
+    class FileSizeFormatter : public pfc::string_formatter {
     public:
-        format_file_size(t_uint64 size)
+        FileSizeFormatter(t_uint64 size)
         {
             t_uint64 scale = 1024;
             const char * unit = "kB";
