@@ -1,115 +1,145 @@
 #pragma once
 
-namespace mmh
-{
+namespace mmh {
 
-template<class T>
-class comptr_t
-{
-public:
-    comptr_t(IUnknown * pUnk)
-        : m_Unk(nullptr)
-    {
-        copy(pUnk);
-    }
-    comptr_t()
-        : m_Unk(nullptr) {};
-
-    comptr_t(const comptr_t <T> & p_source)
-        : m_Unk(nullptr)
-    {
-        copy(p_source);
-    }
-
-    template <typename Q>
-    comptr_t(const comptr_t <Q> & p_source)
-         : m_Unk(nullptr)
-    {
-        copy(p_source);
-    }
-
-    comptr_t(comptr_t <T> && p_source)
-        : m_Unk(nullptr)
-    {
-        m_Unk = p_source.m_Unk;
-        p_source.m_Unk = nullptr;
-    }
-
-    ~comptr_t()
-    {
-        release();
-    }
-    inline void release()
-    {
-        if (m_Unk)
+    template <class T>
+    class ComPtr {
+    public:
+        ComPtr(IUnknown* pUnk)
+            : m_Unk(nullptr)
         {
-            m_Unk->Release();
-            m_Unk=nullptr;
+            copy(pUnk);
         }
-    }
-    inline void copy(IUnknown * p_Unk)
-    {
-        release();
-        if (p_Unk)
+
+        ComPtr()
+            : m_Unk(nullptr) {};
+
+        ComPtr(const ComPtr<T>& p_source)
+            : m_Unk(nullptr)
         {
-            p_Unk->QueryInterface(&m_Unk);
+            copy(p_source);
         }
-    }
 
-    void attach(T * p_Unk)
-    {
-        m_Unk = p_Unk;
-    }
+        template <typename Q>
+        ComPtr(const ComPtr<Q>& p_source)
+            : m_Unk(nullptr)
+        {
+            copy(p_source);
+        }
 
-    template<class Q>
-    inline void copy(const comptr_t<Q> & p_source) {copy(p_source.get_ptr());}
+        ComPtr(ComPtr<T>&& p_source) noexcept
+            : m_Unk(nullptr)
+        {
+            m_Unk = p_source.m_Unk;
+            p_source.m_Unk = nullptr;
+        }
 
-    comptr_t<T> & operator=(const comptr_t<T> & p_Unk) { copy(p_Unk); return *this; }
-    
-    comptr_t<T> & operator=(comptr_t<T> && p_Other) {
-        m_Unk = p_Other.m_Unk;
-        p_Other.m_Unk = nullptr;
-        return *this;
-    }
+        ~ComPtr()
+        {
+            release();
+        }
 
-    template<class Q>
-    inline comptr_t<T> & operator=(const comptr_t<Q> & p_Unk) {copy(p_Unk); return *this;}
+        void release()
+        {
+            if (m_Unk) {
+                m_Unk->Release();
+                m_Unk = nullptr;
+            }
+        }
 
-    inline comptr_t<T> & operator=(IUnknown * p_Unk) {copy(p_Unk); return *this;}
+        void copy(IUnknown* p_Unk)
+        {
+            release();
+            if (p_Unk) {
+                p_Unk->QueryInterface(&m_Unk);
+            }
+        }
 
-    inline T* operator->() const {assert(m_Unk);return m_Unk;}
+        void attach(T* p_Unk)
+        {
+            m_Unk = p_Unk;
+        }
 
-    inline operator void** () {release();return (void**)&m_Unk;}
-    inline operator T** () {release();return &m_Unk;}
-    T** get_pp() {release(); return &m_Unk;}
-    inline operator T* () {
-        //assert(m_Unk);  //sometimes you may want to pass a NULL pointer as a function parameter
-        return m_Unk;
-    }
+        template <class Q>
+        void copy(const ComPtr<Q>& p_source) { copy(p_source.get_ptr()); }
 
-    inline T* get_ptr() const {return m_Unk;}
-    inline bool is_valid() const {return m_Unk != nullptr;}
-    inline bool is_empty() const {return m_Unk == 0;}
+        ComPtr<T>& operator=(const ComPtr<T>& p_Unk)
+        {
+            copy(p_Unk);
+            return *this;
+        }
 
-    inline bool operator==(const comptr_t<T> & p_item) const {return m_Unk == p_item.m_Unk;}
-    inline bool operator!=(const comptr_t<T> & p_item) const {return m_Unk != p_item.m_Unk;}
-    inline bool operator>(const comptr_t<T> & p_item) const {return m_Unk > p_item.m_Unk;}
-    inline bool operator<(const comptr_t<T> & p_item) const {return m_Unk < p_item.m_Unk;}
+        ComPtr<T>& operator=(ComPtr<T>&& p_Other) noexcept
+        {
+            m_Unk = p_Other.m_Unk;
+            p_Other.m_Unk = nullptr;
+            return *this;
+        }
 
-    inline static void g_swap(comptr_t<T> & item1, comptr_t<T> & item2)
-    {
-        pfc::swap_t(item1.m_Unk,item2.m_Unk);
-    }
+        template <class Q>
+        ComPtr<T>& operator=(const ComPtr<Q>& p_Unk)
+        {
+            copy(p_Unk);
+            return *this;
+        }
 
-    HRESULT instantiate(REFCLSID rclsid, LPUNKNOWN pUnkOuter = nullptr, DWORD dwClsContext = CLSCTX_ALL) throw()
-    {
-        return CoCreateInstance(rclsid, pUnkOuter, dwClsContext, __uuidof(T), *this);
-    }
+        ComPtr<T>& operator=(IUnknown* p_Unk)
+        {
+            copy(p_Unk);
+            return *this;
+        }
 
-    HRESULT instantiate();
+        T* operator->() const
+        {
+            assert(m_Unk);
+            return m_Unk;
+        }
 
-private:
-    T * m_Unk;
-};
+        operator void**()
+        {
+            release();
+            return (void**)&m_Unk;
+        }
+
+        operator T**()
+        {
+            release();
+            return &m_Unk;
+        }
+
+        T** get_pp()
+        {
+            release();
+            return &m_Unk;
+        }
+
+        operator T*()
+        {
+            //assert(m_Unk);  //sometimes you may want to pass a NULL pointer as a function parameter
+            return m_Unk;
+        }
+
+        T* get_ptr() const { return m_Unk; }
+        bool is_valid() const { return m_Unk != nullptr; }
+        bool is_empty() const { return m_Unk == nullptr; }
+
+        bool operator==(const ComPtr<T>& p_item) const { return m_Unk == p_item.m_Unk; }
+        bool operator!=(const ComPtr<T>& p_item) const { return m_Unk != p_item.m_Unk; }
+        bool operator>(const ComPtr<T>& p_item) const { return m_Unk > p_item.m_Unk; }
+        bool operator<(const ComPtr<T>& p_item) const { return m_Unk < p_item.m_Unk; }
+
+        static void g_swap(ComPtr<T>& item1, ComPtr<T>& item2)
+        {
+            pfc::swap_t(item1.m_Unk, item2.m_Unk);
+        }
+
+        HRESULT instantiate(REFCLSID rclsid, LPUNKNOWN pUnkOuter = nullptr, DWORD dwClsContext = CLSCTX_ALL) throw()
+        {
+            return CoCreateInstance(rclsid, pUnkOuter, dwClsContext, __uuidof(T), *this);
+        }
+
+    private:
+        T* m_Unk;
+    };
 
 }

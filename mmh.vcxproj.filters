@@ -9,7 +9,6 @@
     <ClCompile Include="sha1.cpp">
       <Filter>SHA-1</Filter>
     </ClCompile>
-    <ClCompile Include="comptr.cpp" />
     <ClCompile Include="osversion.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="string.cpp" />

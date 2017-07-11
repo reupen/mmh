@@ -145,7 +145,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sha1.cpp" />
-    <ClCompile Include="comptr.cpp" />
     <ClCompile Include="osversion.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="stdafx.cpp">
