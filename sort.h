@@ -2,64 +2,64 @@
 
 namespace mmh
 {
-    using permutation_base_t = pfc::list_t<t_size>;
+    using PermutationBase = pfc::list_t<t_size>;
 
-    class permutation_t : public permutation_base_t
+    class Permuation : public PermutationBase
     {
     public:
         void reset()
         {
-            t_size j, count=get_size();
+            const t_size count=get_size();
             t_size * ptr = get_ptr();
-            for (j=0; j<count; j++)
+            for (t_size j = 0; j<count; j++)
                 ptr[j] = j;
         }
         void reset_reverse()
         {
-            t_size j, count=get_size();
+            const t_size count=get_size();
             t_size * ptr = get_ptr();
-            for (j=0; j<count; j++)
+            for (t_size j = 0; j<count; j++)
                 ptr[j] = count-j-1;
         }
         void set_size(t_size size)
         {
-            pfc::list_t<t_size>::set_size(size);
+            PermutationBase::set_size(size);
             reset();
         }
         void set_count(t_size size)
         {
             set_size(size);
-        };
-        permutation_t(t_size size)
+        }
+        Permuation(t_size size)
         {
             set_size(size);
             reset();
-        };
-        permutation_t() {};
+        }
+        Permuation() {}
 
-        using pfc::list_t<t_size>::operator[];
+        using PermutationBase::operator[];
     };
 
-    class permutation_inverse_t : public permutation_t
+    class InversePermutation : public Permuation
     {
     public:
-        permutation_inverse_t(const permutation_t & p_source)
+        InversePermutation(const Permuation & p_source)
         {
-            t_size i, count = p_source.get_count();
-            permutation_base_t::set_size (count);
-            for(i=0;i<count;i++)
+            const t_size count = p_source.get_count();
+            PermutationBase::set_size (count);
+            for(t_size i = 0;i<count;i++)
                 (*this)[p_source[i]] = i;
         }
     };
 
-    class permutation_reverse_t : public permutation_t
+    class ReversePermutation : public Permuation
     {
     public:
-        permutation_reverse_t(const permutation_t & p_source)
+        ReversePermutation(const Permuation & p_source)
         {
-            t_size i, count = p_source.get_count();
-            permutation_base_t::set_size (count);
-            for(i=0;i<count;i++)
+            const t_size count = p_source.get_count();
+            PermutationBase::set_size (count);
+            for(t_size i = 0;i<count;i++)
                 (*this)[i] = p_source[count-i-1];
         }
     };
@@ -85,7 +85,7 @@ namespace mmh
     };
 
     template <typename List, typename Comparator>
-    void sort_get_permuation(List&& p_items, permutation_t& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
+    void sort_get_permuation(List&& p_items, Permuation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
                              bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
         t_size psize = pfc::array_size_t(p_out);
@@ -112,7 +112,7 @@ namespace mmh
         {
             t_item * p_list = p_handles.get_ptr();
             bit_array_bittable mask(count);
-            permutation_t order(count);
+            Permuation order(count);
 
             sort_get_permuation(p_list, order, p_compare, false, false);
             
@@ -132,12 +132,12 @@ namespace mmh
     }
 
     template<typename t_container,typename t_compare, typename t_param>
-    class bsearch_callback_impl_simple_partial_t : public pfc::bsearch_callback {
+    class PartialBSearchCallback : public pfc::bsearch_callback {
     public:
         int test(t_size p_index) const override {
             return m_compare(m_container[m_base+p_index],m_param) * (m_is_reversed ? -1 : 1);
         }
-        bsearch_callback_impl_simple_partial_t(const t_container & p_container,t_compare p_compare,const t_param & p_param, t_size base, bool is_reversed = false)
+        PartialBSearchCallback(const t_container & p_container,t_compare p_compare,const t_param & p_param, t_size base, bool is_reversed = false)
             : m_container(p_container), m_compare(p_compare), m_param(p_param), m_base(base), m_is_reversed(is_reversed)
         {
         }
@@ -150,48 +150,14 @@ namespace mmh
     };
 
     template<typename t_container,typename t_compare, typename t_param>
-    bool bsearch_partial_t(t_size p_count,const t_container & p_container,t_compare p_compare,const t_param & p_param,t_size base,t_size & p_index, bool is_reversed = false) 
+    bool partial_bsearch(t_size p_count,const t_container & p_container,t_compare p_compare,const t_param & p_param,t_size base,t_size & p_index, bool is_reversed = false) 
     {
         t_size index = p_index;
         bool ret = bsearch(
             p_count,
-            bsearch_callback_impl_simple_partial_t<t_container,t_compare,t_param>(p_container,p_compare,p_param,base, is_reversed),
+            PartialBSearchCallback<t_container,t_compare,t_param>(p_container,p_compare,p_param,base, is_reversed),
             index);
         p_index = index + base;
         return ret;
     }
-
-#if 0
-    template<typename t_container,typename t_compare, typename t_param>
-    bool bsearch_nearest(t_size p_count,const t_container & p_container,t_compare p_compare,const t_param & p_param,t_size & p_index) {
-        return bsearch(
-            p_count,
-            bsearch_callback_impl_simple_t<t_container,t_compare,t_param>(p_container,p_compare,p_param),
-            p_index);
-    }
-
-    template<typename t_callback>
-    void __bsearch_nearest(t_size p_count, const t_callback & p_callback,t_size & p_result)
-    {
-        t_size max = m_items.get_count();
-        t_size min = 0;
-        t_size ptr;
-        while(min<max)
-        {
-            ptr = min + ( (max-min) >> 1);
-            int result = p_callback.test(ptr);
-            if (result<0) min = ptr + 1;
-            else if (result>0) max = ptr;
-            else 
-            {
-                return ptr;
-                //return true;
-            }
-        }
-        if (min==m_items.get_count()) min--;
-        return min;
-        //return true;
-    }
-#endif
-
 }
