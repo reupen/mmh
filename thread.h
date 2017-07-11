@@ -1,50 +1,12 @@
 #pragma once
 
 namespace mmh {
-    class thread_t {
+    class Thread {
     public:
         void create_thread()
         {
             if (!m_thread)
-                m_thread = CreateThread(nullptr, NULL, &g_threadproc, (LPVOID)this, NULL, nullptr);
-        }
-        void on_destroy_thread()
-        {
-            if (m_thread)
-            {
-                WaitForSingleObject(m_thread, 10 * 1000);
-                CloseHandle(m_thread);
-                m_thread = nullptr;
-            }
-        }
-        HANDLE get_thread() { return m_thread; }
-        void release_thread()
-        {
-            if (m_thread)
-            {
-                CloseHandle(m_thread);
-                m_thread = nullptr;
-            }
-        }
-        virtual DWORD on_thread() = 0;
-        thread_t() : m_thread(nullptr) {};
-
-        virtual ~thread_t() = default;;
-    private:
-        static DWORD CALLBACK g_threadproc(LPVOID lpThreadParameter)
-        {
-            thread_t * p_this = reinterpret_cast<thread_t*>(lpThreadParameter);
-            return p_this->on_thread();
-        }
-        HANDLE m_thread;
-    };
-
-    class thread_v2_t {
-    public:
-        void create_thread()
-        {
-            if (!m_thread)
-                m_thread = CreateThread(nullptr, NULL, &g_on_thread, (LPVOID)this, NULL, nullptr);
+                m_thread = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, NULL, &g_on_thread, static_cast<LPVOID>(this), NULL, nullptr));
         }
         void set_priority(int priority)
         {
@@ -68,9 +30,9 @@ namespace mmh {
         bool is_thread_open() { return m_thread != nullptr; }
         HANDLE get_thread() { return m_thread; }
         virtual DWORD on_thread() = 0;
-        thread_v2_t() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL) {};
+        Thread() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL) {};
 
-        virtual ~thread_v2_t() = default;;
+        virtual ~Thread() = default;;
 
         void release_thread()
         {
@@ -82,9 +44,9 @@ namespace mmh {
         }
 
     private:
-        static DWORD CALLBACK g_on_thread(LPVOID lpThreadParameter)
+        static unsigned CALLBACK g_on_thread(LPVOID lpThreadParameter)
         {
-            thread_v2_t * p_this = reinterpret_cast<thread_v2_t*>(lpThreadParameter);
+            Thread * p_this = reinterpret_cast<Thread*>(lpThreadParameter);
             if (p_this->m_priority)
                 SetThreadPriority(GetCurrentThread(), p_this->m_priority);
             return p_this->on_thread();
