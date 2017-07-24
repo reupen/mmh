@@ -2,7 +2,7 @@
 
 namespace mmh {
 
-    template <class T>
+    template<class T>
     class ComPtr {
     public:
         ComPtr(IUnknown* pUnk)
@@ -20,7 +20,7 @@ namespace mmh {
             copy(p_source);
         }
 
-        template <typename Q>
+        template<typename Q>
         ComPtr(const ComPtr<Q>& p_source)
             : m_Unk(nullptr)
         {
@@ -60,7 +60,7 @@ namespace mmh {
             m_Unk = p_Unk;
         }
 
-        template <class Q>
+        template<class Q>
         void copy(const ComPtr<Q>& p_source) { copy(p_source.get_ptr()); }
 
         ComPtr<T>& operator=(const ComPtr<T>& p_Unk)
@@ -76,7 +76,7 @@ namespace mmh {
             return *this;
         }
 
-        template <class Q>
+        template<class Q>
         ComPtr<T>& operator=(const ComPtr<Q>& p_Unk)
         {
             copy(p_Unk);
