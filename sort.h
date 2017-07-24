@@ -104,6 +104,23 @@ namespace mmh
         }
     }
 
+    template<typename List>
+    void destructive_reorder(List& items, mmh::Permuation& perm)
+    {
+        for (size_t i = 1; i < perm.get_size(); ++i) {
+            t_size current = i;
+            t_size next = perm[i];
+            while (next != i) {
+                std::swap(items[current], items[next]);
+                perm[current] = current;
+                current = next;
+                next = perm[next];
+            }
+            perm[current] = current;
+        }
+    }
+
+
     template <typename t_item, template<typename> class t_alloc, typename t_compare>
     void remove_duplicates(pfc::list_t<t_item, t_alloc>& p_handles, t_compare p_compare)
     {
