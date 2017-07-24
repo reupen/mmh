@@ -53,7 +53,7 @@ namespace mmh {
     char format_digit(unsigned p_val);
     t_size power_of_ten(t_size raiseTo);
 
-    template <typename TChar, typename TInteger = uint32_t>
+    template<typename TChar, typename TInteger = uint32_t>
     TInteger strtoul_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10)
     {
         TInteger rv = 0;
@@ -82,13 +82,13 @@ namespace mmh {
         return rv;
     }
 
-    template <typename TChar>
+    template<typename TChar>
     uint64_t strtoul64_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10)
     {
         return strtoul_n<TChar, uint64_t>(p_val, p_val_length, base);
     }
 
-    template <typename TChar, typename TInteger = uint32_t>
+    template<typename TChar, typename TInteger = uint32_t>
     TInteger strtol_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10)
     {
         TInteger rv = 0;
@@ -123,7 +123,7 @@ namespace mmh {
         return rv;
     }
 
-    template <typename TChar>
+    template<typename TChar>
     int64_t strtol64_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10)
     {
         return strtol_n<TChar, int64_t>(p_val, p_val_length, base);

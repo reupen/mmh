@@ -64,7 +64,7 @@ namespace mmh
         }
     };
 
-    template <typename List, typename Comparator>
+    template<typename List, typename Comparator>
     class ComparatorWrapper
     {
         Comparator& m_compare;
@@ -84,7 +84,7 @@ namespace mmh
             : m_compare(p_compare), m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise}  {}
     };
 
-    template <typename List, typename Comparator>
+    template<typename List, typename Comparator>
     void sort_get_permuation(List&& p_items, Permuation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
                              bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
@@ -121,7 +121,7 @@ namespace mmh
     }
 
 
-    template <typename t_item, template<typename> class t_alloc, typename t_compare>
+    template<typename t_item, template<typename> class t_alloc, typename t_compare>
     void remove_duplicates(pfc::list_t<t_item, t_alloc>& p_handles, t_compare p_compare)
     {
         t_size count = p_handles.get_count();
