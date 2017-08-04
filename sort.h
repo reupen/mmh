@@ -64,46 +64,6 @@ namespace mmh
         }
     };
 
-    template<typename List, typename Comparator>
-    class ComparatorWrapper
-    {
-        Comparator& m_compare;
-        List& m_list;
-        bool m_reverse;
-        bool m_stabilise;
-    public:
-        bool operator()(const t_size& item1, const t_size& item2) const
-        {
-            int diff = m_compare(m_list[item1], m_list[item2]);
-            if (m_stabilise && !diff)
-                return item1 < item2;
-            return m_reverse ? diff>0 : diff<0;
-        }
-        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
-        ComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse, bool stabilise = false)
-            : m_compare(p_compare), m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise}  {}
-    };
-
-    template<typename List, typename Comparator>
-    void sort_get_permuation(List&& p_items, Permuation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
-                             bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
-    {
-        t_size psize = pfc::array_size_t(p_out);
-        t_size* out_ptr = p_out.get_ptr();
-        if (allow_parallelisation && psize >= parallel_chunk_size) {
-            // C++17 has parallel sort, but it is not implemented in VC2017 yet.
-            ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
-            concurrency::parallel_buffered_sort(out_ptr, out_ptr + psize, p_context, parallel_chunk_size);
-        } 
-        else {
-            ComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
-            if (stabilise)
-                std::stable_sort(out_ptr, out_ptr + psize, p_context);
-            else
-                std::sort(out_ptr, out_ptr + psize, p_context);
-        }
-    }
-
     template<typename List>
     void destructive_reorder(List& items, mmh::Permuation& perm)
     {
@@ -120,6 +80,91 @@ namespace mmh
         }
     }
 
+    template<typename List, typename Comparator>
+    class IndexComparatorWrapper
+    {
+        Comparator& m_compare;
+        List& m_list;
+        bool m_reverse;
+        bool m_stabilise;
+    public:
+        bool operator()(const t_size& item1, const t_size& item2) const
+        {
+            int diff = m_compare(m_list[item1], m_list[item2]);
+            if (m_stabilise && !diff)
+                return item1 < item2;
+            return m_reverse ? diff>0 : diff<0;
+        }
+        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
+        IndexComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse, bool stabilise = false)
+            : m_compare(p_compare), m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise} {}
+    };
+
+    template<typename Comparator>
+    class ComparatorWrapper
+    {
+        Comparator& m_compare;
+        bool m_reverse;
+    public:
+        template<typename Item>
+        bool operator()(const Item& item1, const Item& item2) const
+        {
+            int diff = m_compare(item1, item2);
+            return m_reverse ? diff>0 : diff<0;
+        }
+        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
+        ComparatorWrapper(Comparator& p_compare, bool b_reverse)
+            : m_compare(p_compare), m_reverse{b_reverse} {}
+    };
+
+    template<typename List, typename Comparator>
+    void sort_get_permuation(List&& p_items, Permuation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
+                             bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
+    {
+        t_size psize = pfc::array_size_t(p_out);
+        t_size* out_ptr = p_out.get_ptr();
+        if (allow_parallelisation && psize >= parallel_chunk_size) {
+            // C++17 has parallel sort, but it is not implemented in VC2017 yet.
+            IndexComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
+            concurrency::parallel_buffered_sort(out_ptr, out_ptr + psize, p_context, parallel_chunk_size);
+        } 
+        else {
+            IndexComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
+            if (stabilise)
+                std::stable_sort(out_ptr, out_ptr + psize, p_context);
+            else
+                std::sort(out_ptr, out_ptr + psize, p_context);
+        }
+    }
+
+    template<typename List, typename Comparator>
+    void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
+        bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
+    {
+        t_size psize = pfc::array_size_t(items);
+        auto* out_ptr = items.get_ptr();
+        ComparatorWrapper<Comparator> p_context(comparator, reverse);
+        if (!stabilise && allow_parallelisation && psize >= parallel_chunk_size) {
+            // C++17 has parallel sort, but it is not implemented in VC2017 yet.
+            concurrency::parallel_buffered_sort(out_ptr, out_ptr + psize, p_context, parallel_chunk_size);
+        }
+        else {
+            if (stabilise)
+                std::stable_sort(out_ptr, out_ptr + psize, p_context);
+            else
+                std::sort(out_ptr, out_ptr + psize, p_context);
+        }
+    }
+
+    template<typename List, typename Comparator>
+    void single_reordering_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
+        bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
+    {
+        t_size size = pfc::array_size_t(items);
+        Permuation perm(size);
+        sort_get_permuation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
+        destructive_reorder(items, perm);
+    }
 
     template<typename t_item, template<typename> class t_alloc, typename t_compare>
     void remove_duplicates(pfc::list_t<t_item, t_alloc>& p_handles, t_compare p_compare)
