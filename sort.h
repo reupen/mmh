@@ -95,9 +95,8 @@ namespace mmh
                 return item1 < item2;
             return m_reverse ? diff>0 : diff<0;
         }
-        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
         IndexComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse, bool stabilise = false)
-            : m_compare(p_compare), m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise} {}
+            : m_compare{p_compare}, m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise} {}
     };
 
     template<typename Comparator>
@@ -112,9 +111,8 @@ namespace mmh
             int diff = m_compare(item1, item2);
             return m_reverse ? diff>0 : diff<0;
         }
-        // Note: m_compare{p_compare} does not compile under VS2015, but compiles under VC2017 and Clang
         ComparatorWrapper(Comparator& p_compare, bool b_reverse)
-            : m_compare(p_compare), m_reverse{b_reverse} {}
+            : m_compare{p_compare}, m_reverse{b_reverse} {}
     };
 
     template<typename List, typename Comparator>
