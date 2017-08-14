@@ -52,7 +52,7 @@ namespace mmh {
 
     const char * convert_utf16_to_ascii(const WCHAR * str_utf16, t_size len, pfc::string_base & p_out)
     {
-        char * replacement = "_";
+        const char* replacement = "_";
         t_size len_max = min(wcslen(str_utf16), len);
         if (len_max)
         {
