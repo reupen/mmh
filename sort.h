@@ -116,7 +116,7 @@ namespace mmh
     };
 
     template<typename List, typename Comparator>
-    void sort_get_permuation(List&& p_items, Permutation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
+    void sort_get_permutation(List&& p_items, Permutation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
                              bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
         t_size psize = pfc::array_size_t(p_out);
@@ -160,7 +160,7 @@ namespace mmh
     {
         t_size size = pfc::array_size_t(items);
         Permutation perm(size);
-        sort_get_permuation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
+        sort_get_permutation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
         destructive_reorder(items, perm);
     }
 
@@ -174,7 +174,7 @@ namespace mmh
             bit_array_bittable mask(count);
             Permutation order(count);
 
-            sort_get_permuation(p_list, order, p_compare, false, false);
+            sort_get_permutation(p_list, order, p_compare, false, false);
             
             t_size n;
             bool found = false;
