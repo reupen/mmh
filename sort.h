@@ -4,7 +4,7 @@ namespace mmh
 {
     using PermutationBase = pfc::list_t<t_size>;
 
-    class Permuation : public PermutationBase
+    class Permutation : public PermutationBase
     {
     public:
         void reset()
@@ -30,20 +30,20 @@ namespace mmh
         {
             set_size(size);
         }
-        Permuation(t_size size)
+        Permutation(t_size size)
         {
             set_size(size);
             reset();
         }
-        Permuation() {}
+        Permutation() {}
 
         using PermutationBase::operator[];
     };
 
-    class InversePermutation : public Permuation
+    class InversePermutation : public Permutation
     {
     public:
-        InversePermutation(const Permuation & p_source)
+        InversePermutation(const Permutation & p_source)
         {
             const t_size count = p_source.get_count();
             PermutationBase::set_size (count);
@@ -52,10 +52,10 @@ namespace mmh
         }
     };
 
-    class ReversePermutation : public Permuation
+    class ReversePermutation : public Permutation
     {
     public:
-        ReversePermutation(const Permuation & p_source)
+        ReversePermutation(const Permutation & p_source)
         {
             const t_size count = p_source.get_count();
             PermutationBase::set_size (count);
@@ -65,7 +65,7 @@ namespace mmh
     };
 
     template<typename List>
-    void destructive_reorder(List& items, mmh::Permuation& perm)
+    void destructive_reorder(List& items, mmh::Permutation& perm)
     {
         for (size_t i = 1; i < perm.get_size(); ++i) {
             t_size current = i;
@@ -116,7 +116,7 @@ namespace mmh
     };
 
     template<typename List, typename Comparator>
-    void sort_get_permuation(List&& p_items, Permuation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
+    void sort_get_permuation(List&& p_items, Permutation& p_out, Comparator&& p_compare, bool stabilise, bool b_reverse = false, 
                              bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
         t_size psize = pfc::array_size_t(p_out);
@@ -159,7 +159,7 @@ namespace mmh
         bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
     {
         t_size size = pfc::array_size_t(items);
-        Permuation perm(size);
+        Permutation perm(size);
         sort_get_permuation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
         destructive_reorder(items, perm);
     }
@@ -172,7 +172,7 @@ namespace mmh
         {
             t_item * p_list = p_handles.get_ptr();
             bit_array_bittable mask(count);
-            Permuation order(count);
+            Permutation order(count);
 
             sort_get_permuation(p_list, order, p_compare, false, false);
             
