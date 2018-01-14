@@ -171,7 +171,7 @@ namespace mmh
         if (count>0)
         {
             t_item * p_list = p_handles.get_ptr();
-            bit_array_bittable mask(count);
+            pfc::bit_array_bittable mask(count);
             Permutation order(count);
 
             sort_get_permutation(p_list, order, p_compare, false, false);
