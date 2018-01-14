@@ -5,10 +5,11 @@
 #include <assert.h>
 #include <ppl.h>
 
+// Included before windows.h, because pfc.h includes winsock2.h
+#include "../pfc/pfc.h"
+
 #include <windows.h>
 #include <VersionHelpers.h>
-
-#include "../pfc/pfc.h"
 
 #include "osversion.h"
 #include "exception.h"
