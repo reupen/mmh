@@ -164,6 +164,7 @@
     <ClCompile Include="thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="algorithm.h" />
     <ClInclude Include="module.h" />
     <ClInclude Include="sha1.h" />
     <ClInclude Include="comptr.h" />

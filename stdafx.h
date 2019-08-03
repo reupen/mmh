@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <VersionHelpers.h>
 
+#include "algorithm.h"
 #include "osversion.h"
 #include "exception.h"
 #include "module.h"
