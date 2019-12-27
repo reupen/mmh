@@ -29,6 +29,7 @@
     <ClInclude Include="thread.h" />
     <ClInclude Include="module.h" />
     <ClInclude Include="algorithm.h" />
+    <ClInclude Include="functional.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
