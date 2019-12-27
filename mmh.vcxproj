@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.h" />
+    <ClInclude Include="functional.h" />
     <ClInclude Include="module.h" />
     <ClInclude Include="sha1.h" />
     <ClInclude Include="comptr.h" />

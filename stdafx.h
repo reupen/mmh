@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <numeric>
 
 #include <assert.h>
 #include <ppl.h>
@@ -14,6 +15,7 @@
 #include "algorithm.h"
 #include "osversion.h"
 #include "exception.h"
+#include "functional.h"
 #include "module.h"
 #include "sort.h"
 #include "string.h"
