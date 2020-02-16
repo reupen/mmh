@@ -12,7 +12,10 @@
 #include <windows.h>
 #include <VersionHelpers.h>
 
+#include "type_traits.h"
 #include "algorithm.h"
+#include "pfc_interop.h"
+
 #include "osversion.h"
 #include "exception.h"
 #include "functional.h"

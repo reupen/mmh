@@ -113,7 +113,7 @@ template <typename List, typename Comparator>
 void sort_get_permutation(List&& p_items, Permutation& p_out, Comparator&& p_compare, bool stabilise,
     bool b_reverse = false, bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size psize = pfc::array_size_t(p_out);
+    const t_size psize = get_container_size(p_out);
     t_size* out_ptr = p_out.get_ptr();
     if (allow_parallelisation && psize >= parallel_chunk_size) {
         // C++17 has parallel sort, but it is not implemented in VC2017 yet.
@@ -132,7 +132,7 @@ template <typename List, typename Comparator>
 void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size psize = pfc::array_size_t(items);
+    t_size psize = get_container_size(items);
     auto* out_ptr = items.get_ptr();
     ComparatorWrapper<Comparator> p_context(comparator, reverse);
     if (!stabilise && allow_parallelisation && psize >= parallel_chunk_size) {
@@ -150,7 +150,7 @@ template <typename List, typename Comparator>
 void single_reordering_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size size = pfc::array_size_t(items);
+    t_size size = get_container_size(items);
     Permutation perm(size);
     sort_get_permutation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
     destructive_reorder(items, perm);
