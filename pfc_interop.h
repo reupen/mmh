@@ -5,7 +5,7 @@ namespace mmh {
 namespace _ {
 
 template <typename T>
-using size = decltype(std::declval<T&>().size());
+using size = decltype(std::declval<T>().size());
 
 }
 
