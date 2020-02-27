@@ -3,64 +3,63 @@
 namespace mmh {
 using PermutationBase = pfc::list_t<t_size>;
 
-class Permutation : public PermutationBase {
-public:
-    void reset()
-    {
-        const t_size count = get_size();
-        t_size* ptr = get_ptr();
-        for (t_size j = 0; j < count; j++)
-            ptr[j] = j;
-    }
-    void reset_reverse()
-    {
-        const t_size count = get_size();
-        t_size* ptr = get_ptr();
-        for (t_size j = 0; j < count; j++)
-            ptr[j] = count - j - 1;
-    }
-    void set_size(t_size size)
-    {
-        PermutationBase::set_size(size);
-        reset();
-    }
-    void set_count(t_size size) { set_size(size); }
-    Permutation(t_size size)
-    {
-        set_size(size);
-        reset();
-    }
-    Permutation() {}
+class Permutation {
+    using Storage = std::vector<size_t>;
 
-    using PermutationBase::operator[];
-};
-
-class InversePermutation : public Permutation {
 public:
-    InversePermutation(const Permutation& p_source)
-    {
-        const t_size count = p_source.get_count();
-        PermutationBase::set_size(count);
-        for (t_size i = 0; i < count; i++)
-            (*this)[p_source[i]] = i;
-    }
-};
+    Permutation() = default;
+    Permutation(Storage::size_type size) { resize(size); }
 
-class ReversePermutation : public Permutation {
-public:
-    ReversePermutation(const Permutation& p_source)
+    void resize(Storage::size_type size)
     {
-        const t_size count = p_source.get_count();
-        PermutationBase::set_size(count);
-        for (t_size i = 0; i < count; i++)
-            (*this)[i] = p_source[count - i - 1];
+        m_data.resize(size);
+        std::iota(m_data.begin(), m_data.end(), Storage::value_type{0});
     }
+
+    [[nodiscard]] Storage::size_type size() const { return m_data.size(); }
+    [[nodiscard]] Storage::value_type* data() { return m_data.data(); }
+
+    Storage::value_type& operator[](Storage::size_type index) noexcept { return m_data[index]; }
+
+    decltype(std::declval<Storage>().begin()) begin() { return m_data.begin(); }
+    decltype(std::declval<Storage>().end()) end() { return m_data.end(); }
+    decltype(std::declval<Storage>().rbegin()) rbegin() { return m_data.rbegin(); }
+    decltype(std::declval<Storage>().rend()) rend() { return m_data.rend(); }
+    decltype(std::declval<Storage>().cbegin()) cbegin() { return m_data.cbegin(); }
+    decltype(std::declval<Storage>().cend()) cend() { return m_data.cend(); }
+    decltype(std::declval<Storage>().crbegin()) crbegin() { return m_data.crbegin(); }
+    decltype(std::declval<Storage>().crend()) crend() { return m_data.crend(); }
+
+    Permutation invert()
+    {
+        Permutation inverted;
+        inverted.m_data.resize(size());
+
+        for (Storage::size_type i{}; i < size(); ++i)
+            inverted.m_data[m_data[i]] = i;
+
+        return inverted;
+    }
+
+    Permutation reverse()
+    {
+        Permutation reversed;
+        reversed.m_data.resize(size());
+
+        for (Storage::size_type i{}, size_ = size(); i < size_; ++i)
+            reversed.m_data[m_data[size_ - i - 1]] = i;
+
+        return reversed;
+    }
+
+private:
+    Storage m_data;
 };
 
 template <typename List>
 void destructive_reorder(List& items, mmh::Permutation& perm)
 {
-    for (size_t i = 1; i < perm.get_size(); ++i) {
+    for (size_t i = 1; i < perm.size(); ++i) {
         t_size current = i;
         t_size next = perm[i];
         while (next != i) {
@@ -113,8 +112,8 @@ template <typename List, typename Comparator>
 void sort_get_permutation(List&& p_items, Permutation& p_out, Comparator&& p_compare, bool stabilise,
     bool b_reverse = false, bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size psize = pfc::array_size_t(p_out);
-    t_size* out_ptr = p_out.get_ptr();
+    const t_size psize = get_container_size(p_out);
+    t_size* out_ptr = p_out.data();
     if (allow_parallelisation && psize >= parallel_chunk_size) {
         // C++17 has parallel sort, but it is not implemented in VC2017 yet.
         IndexComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
@@ -132,7 +131,7 @@ template <typename List, typename Comparator>
 void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size psize = pfc::array_size_t(items);
+    t_size psize = get_container_size(items);
     auto* out_ptr = items.get_ptr();
     ComparatorWrapper<Comparator> p_context(comparator, reverse);
     if (!stabilise && allow_parallelisation && psize >= parallel_chunk_size) {
@@ -150,7 +149,7 @@ template <typename List, typename Comparator>
 void single_reordering_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
-    t_size size = pfc::array_size_t(items);
+    t_size size = get_container_size(items);
     Permutation perm(size);
     sort_get_permutation(items, perm, comparator, stabilise, reverse, allow_parallelisation, parallel_chunk_size);
     destructive_reorder(items, perm);

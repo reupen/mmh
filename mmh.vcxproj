@@ -155,6 +155,7 @@
     <ClInclude Include="algorithm.h" />
     <ClInclude Include="functional.h" />
     <ClInclude Include="module.h" />
+    <ClInclude Include="pfc_interop.h" />
     <ClInclude Include="sha1.h" />
     <ClInclude Include="comptr.h" />
     <ClInclude Include="exception.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
+    <ClInclude Include="type_traits.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\pfc\pfc.vcxproj">
