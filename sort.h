@@ -20,17 +20,18 @@ public:
     [[nodiscard]] Storage::value_type* data() { return m_data.data(); }
 
     Storage::value_type& operator[](Storage::size_type index) noexcept { return m_data[index]; }
+    Storage::value_type operator[](Storage::size_type index) const noexcept { return m_data[index]; }
 
-    decltype(std::declval<Storage>().begin()) begin() { return m_data.begin(); }
-    decltype(std::declval<Storage>().end()) end() { return m_data.end(); }
-    decltype(std::declval<Storage>().rbegin()) rbegin() { return m_data.rbegin(); }
-    decltype(std::declval<Storage>().rend()) rend() { return m_data.rend(); }
-    decltype(std::declval<Storage>().cbegin()) cbegin() { return m_data.cbegin(); }
-    decltype(std::declval<Storage>().cend()) cend() { return m_data.cend(); }
-    decltype(std::declval<Storage>().crbegin()) crbegin() { return m_data.crbegin(); }
-    decltype(std::declval<Storage>().crend()) crend() { return m_data.crend(); }
+    decltype(std::declval<Storage>().begin()) begin() noexcept { return m_data.begin(); }
+    decltype(std::declval<Storage>().end()) end() noexcept { return m_data.end(); }
+    decltype(std::declval<Storage>().rbegin()) rbegin() noexcept { return m_data.rbegin(); }
+    decltype(std::declval<Storage>().rend()) rend() noexcept { return m_data.rend(); }
+    decltype(std::declval<Storage>().cbegin()) cbegin() const noexcept { return m_data.cbegin(); }
+    decltype(std::declval<Storage>().cend()) cend() const noexcept { return m_data.cend(); }
+    decltype(std::declval<Storage>().crbegin()) crbegin() const noexcept { return m_data.crbegin(); }
+    decltype(std::declval<Storage>().crend()) crend() const noexcept { return m_data.crend(); }
 
-    Permutation invert()
+    Permutation invert() const
     {
         Permutation inverted;
         inverted.m_data.resize(size());
@@ -41,7 +42,7 @@ public:
         return inverted;
     }
 
-    Permutation reverse()
+    Permutation reverse() const
     {
         Permutation reversed;
         reversed.m_data.resize(size());
