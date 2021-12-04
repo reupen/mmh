@@ -9,6 +9,11 @@ t_size power_of_ten(t_size raiseTo)
     return ret;
 }
 
+const char* literals::pcc::operator""_pcc(const char8_t* str, size_t)
+{
+    return reinterpret_cast<const char*>(str);
+}
+
 IntegerFormatter::IntegerFormatter(t_uint64 size)
 {
     // Calculate number of digits safely.

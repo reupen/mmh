@@ -2,6 +2,12 @@
 
 namespace mmh {
 
+namespace literals::pcc {
+
+const char* operator"" _pcc(const char8_t* str, size_t);
+
+} // namespace literals::pcc
+
 /**
  * Note: GetNumberFormat is not used as it will format with decimal places (unless a custom
  * NUMBERFMT is passed, which means bypassing the user's own settings anyway).
