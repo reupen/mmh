@@ -3,10 +3,10 @@
 namespace mmh {
 class GenRand {
 public:
-    void run(void* p_buffer, t_size len)
+    void run(void* p_buffer, DWORD len)
     {
         memset(p_buffer, 0, len);
-        CryptGenRandom(m_prov, len, (BYTE*)p_buffer);
+        CryptGenRandom(m_prov, len, static_cast<BYTE*>(p_buffer));
     }
 
     t_uint64 run_uint64()

@@ -62,7 +62,7 @@ char format_digit(unsigned p_val);
 t_size power_of_ten(t_size raiseTo);
 
 template <typename TChar, typename TInteger = uint32_t>
-TInteger strtoul_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10)
+TInteger strtoul_n(const TChar* p_val, size_t p_val_length, unsigned base = 10)
 {
     TInteger rv = 0;
     const TChar* ptr = p_val;
