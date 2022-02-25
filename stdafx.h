@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <ppl.h>
 
+#include <gsl/gsl>
+
 // Included before windows.h, because pfc.h includes winsock2.h
 #include "../pfc/pfc.h"
 
@@ -23,7 +25,7 @@
 #include "sort.h"
 #include "string.h"
 #include "thread.h"
-#include "istream.h"
 #include "comptr.h"
 #include "sha1.h"
 #include "rand.h"
+#include "utility.h"

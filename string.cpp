@@ -58,7 +58,7 @@ IntegerFormatter::IntegerFormatter(t_uint64 size)
 const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out)
 {
     const char* replacement = "_";
-    t_size len_max = min(wcslen(str_utf16), len);
+    int len_max = gsl::narrow<int>(std::min(wcslen(str_utf16), len));
     if (len_max) {
         int size_ascii = WideCharToMultiByte(20127, NULL, str_utf16, len_max, nullptr, NULL, replacement, nullptr);
         if (!size_ascii)
@@ -156,7 +156,7 @@ FileSizeFormatter::FileSizeFormatter(t_uint64 size)
         unit = unitTable[walk];
     }
     uint64_t major = (size / scale), minor = 0;
-    t_size minor_digits = 0;
+    uint32_t minor_digits = 0;
 
     bool b_minor = major <= 99 && size;
 

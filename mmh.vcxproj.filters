@@ -12,7 +12,6 @@
     <ClCompile Include="osversion.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="string.cpp" />
-    <ClCompile Include="thread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sha1.h">
@@ -20,7 +19,6 @@
     </ClInclude>
     <ClInclude Include="comptr.h" />
     <ClInclude Include="exception.h" />
-    <ClInclude Include="istream.h" />
     <ClInclude Include="osversion.h" />
     <ClInclude Include="rand.h" />
     <ClInclude Include="sort.h" />
@@ -32,6 +30,7 @@
     <ClInclude Include="functional.h" />
     <ClInclude Include="pfc_interop.h" />
     <ClInclude Include="type_traits.h" />
+    <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
