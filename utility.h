@@ -5,7 +5,7 @@ namespace mmh {
 template <typename Size, typename Object>
 constexpr Size sizeof_t()
 {
-    return gsl::narrow<Size>(sizeof Object);
+    return gsl::narrow<Size>(sizeof(Object));
 }
 
 template <typename Size, typename Value>
