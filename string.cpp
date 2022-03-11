@@ -129,8 +129,7 @@ UIntegerNaturalFormatter::UIntegerNaturalFormatter(t_uint64 p_val, unsigned p_wi
             p_val /= p_base;
         }
 
-        for (n = 0; n < max_width && temp[n] == '0'; n++) {
-        }
+        for (n = 0; n < max_width && temp[n] == '0'; n++) {}
 
         if (n > max_width - p_width)
             n = max_width - p_width;

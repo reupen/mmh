@@ -89,7 +89,10 @@ public:
         return m_reverse ? diff > 0 : diff < 0;
     }
     IndexComparatorWrapper(List& p_list, Comparator& p_compare, bool b_reverse, bool stabilise = false)
-        : m_compare{p_compare}, m_list{p_list}, m_reverse{b_reverse}, m_stabilise{stabilise}
+        : m_compare{p_compare}
+        , m_list{p_list}
+        , m_reverse{b_reverse}
+        , m_stabilise{stabilise}
     {
     }
 };
@@ -190,7 +193,11 @@ public:
     }
     PartialBSearchCallback(const t_container& p_container, t_compare p_compare, const t_param& p_param, t_size base,
         bool is_reversed = false)
-        : m_container(p_container), m_compare(p_compare), m_param(p_param), m_base(base), m_is_reversed(is_reversed)
+        : m_container(p_container)
+        , m_compare(p_compare)
+        , m_param(p_param)
+        , m_base(base)
+        , m_is_reversed(is_reversed)
     {
     }
 
