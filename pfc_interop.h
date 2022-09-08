@@ -2,20 +2,23 @@
 
 namespace mmh {
 
-namespace _ {
-
-template <typename T>
-using size = decltype(std::declval<T>().size());
-
-}
-
 template <class Container>
 auto get_container_size(Container&& container)
 {
-    if constexpr (is_detected_v<_::size, Container>) {
+    if constexpr (requires() { container.size(); }) {
         return container.size();
     } else {
         return container.get_size();
+    }
+}
+
+template <class Container>
+auto get_container_data(Container&& container)
+{
+    if constexpr (requires() { container.data(); }) {
+        return container.data();
+    } else {
+        return container.get_ptr();
     }
 }
 

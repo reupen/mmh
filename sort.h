@@ -136,7 +136,7 @@ void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool r
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
 {
     t_size psize = get_container_size(items);
-    auto* out_ptr = items.get_ptr();
+    auto* out_ptr = get_container_data(items);
     ComparatorWrapper<Comparator> p_context(comparator, reverse);
     if (!stabilise && allow_parallelisation && psize >= parallel_chunk_size) {
         // C++17 has parallel sort, but it is not implemented in VC2017 yet.
