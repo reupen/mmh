@@ -160,31 +160,21 @@ FileSizeFormatter::FileSizeFormatter(t_uint64 size)
     bool b_minor = major <= 99 && size;
 
     uint64_t remainder_raw = size % scale;
-    t_size i = 0, j;
 
     uint64_t remainder = (remainder_raw * 1000) / scale;
-
-    // while (remainder > power_of_ten(i)) i++;
-    // if (i) i--;
-    i = 3;
+    constexpr size_t max_remainder_digits = 3;
 
     if (b_minor) {
         minor_digits = 1;
         if (major < 10)
             minor_digits++;
 
-        minor = remainder / (power_of_ten(i - minor_digits));
+        minor = remainder / (power_of_ten(max_remainder_digits - minor_digits));
 
-        j = minor_digits;
-
-        /*for (j=0; j<minor_digits; j++)
-        {
-        minor *= 10;
-        if (i>j)
-        minor += (remainder ) / power_of_ten(i-j-1);
-        }*/
-        if (i > minor_digits
-            && ((remainder % power_of_ten(i - minor_digits)) / power_of_ten(i - minor_digits - 1)) >= 5) {
+        if (max_remainder_digits > minor_digits
+            && ((remainder % power_of_ten(max_remainder_digits - minor_digits))
+                   / power_of_ten(max_remainder_digits - minor_digits - 1))
+                >= 5) {
             if ((minor % 10 < 9) || (minor_digits == 2 && (((minor % 100) / 10) < 9)))
                 minor++;
             else {
@@ -192,7 +182,7 @@ FileSizeFormatter::FileSizeFormatter(t_uint64 size)
                 minor = 0;
             }
         }
-    } else if (i && ((remainder /*% power_of_ten(i-1)*/) / power_of_ten(i - 1)) >= 5)
+    } else if ((remainder / power_of_ten(max_remainder_digits - 1)) >= 5)
         major++;
 
     *this << major;
