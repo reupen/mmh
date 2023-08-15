@@ -60,7 +60,7 @@ const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::stri
     const char* replacement = "_";
     int len_max = gsl::narrow<int>(std::min(wcslen(str_utf16), len));
     if (len_max) {
-        int size_ascii = WideCharToMultiByte(20127, NULL, str_utf16, len_max, nullptr, NULL, replacement, nullptr);
+        int size_ascii = WideCharToMultiByte(20'127, NULL, str_utf16, len_max, nullptr, NULL, replacement, nullptr);
         if (!size_ascii)
             throw exception_win32(GetLastError());
 
@@ -68,7 +68,7 @@ const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::stri
         str_ascii.set_size(size_ascii + 1);
         str_ascii.fill_null();
         int ret = WideCharToMultiByte(
-            20127, NULL, str_utf16, len_max, str_ascii.get_ptr(), size_ascii, replacement, nullptr);
+            20'127, NULL, str_utf16, len_max, str_ascii.get_ptr(), size_ascii, replacement, nullptr);
         if (!ret)
             throw exception_win32(GetLastError());
         p_out.set_string(str_ascii.get_ptr(), size_ascii);
@@ -92,7 +92,9 @@ char format_digit(unsigned p_val)
 
 UIntegerNaturalFormatter::UIntegerNaturalFormatter(t_uint64 p_val, unsigned p_width, unsigned p_base) : m_value(p_val)
 {
-    enum { max_width = tabsize(m_buffer) - 1 };
+    enum {
+        max_width = tabsize(m_buffer) - 1
+    };
 
     if (p_val < 10) {
         if (p_val == 0)

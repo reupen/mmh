@@ -1,6 +1,9 @@
 namespace mmh {
 namespace hash {
-enum { sha1_digestsize = 20, sha1_blocksize = 64 };
+enum {
+    sha1_digestsize = 20,
+    sha1_blocksize = 64
+};
 
 class sha1_generator {
 public:
