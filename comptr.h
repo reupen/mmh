@@ -7,7 +7,7 @@ class ComPtr {
 public:
     ComPtr(IUnknown* pUnk) : m_Unk(nullptr) { copy(pUnk); }
 
-    ComPtr() : m_Unk(nullptr){};
+    ComPtr() : m_Unk(nullptr) {};
 
     ComPtr(const ComPtr<T>& p_source) : m_Unk(nullptr) { copy(p_source); }
 

@@ -30,7 +30,7 @@ public:
     bool is_thread_open() { return m_thread != nullptr; }
     HANDLE get_thread() { return m_thread; }
     virtual DWORD on_thread() = 0;
-    Thread() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL){};
+    Thread() : m_thread(nullptr), m_priority(THREAD_PRIORITY_NORMAL) {};
 
     virtual ~Thread() = default;
     ;
