@@ -224,4 +224,17 @@ int compare_string_partial_case_insensitive(const char* str, const char* substr)
     }
 }
 
+std::wstring to_utf16(std::string_view utf8_value)
+{
+    const auto utf16_estimated_size = pfc::stringcvt::estimate_utf8_to_wide(utf8_value.data(), utf8_value.size());
+    std::wstring utf16_value;
+    utf16_value.resize(utf16_estimated_size);
+
+    const auto utf16_actual_size = pfc::stringcvt::convert_utf8_to_wide(
+        utf16_value.data(), utf16_estimated_size, utf8_value.data(), utf8_value.size());
+    utf16_value.resize(utf16_actual_size);
+
+    return utf16_value;
+}
+
 } // namespace mmh
