@@ -127,4 +127,14 @@ int64_t strtol64_n(const TChar* p_val, unsigned p_val_length, unsigned base = 10
 {
     return strtol_n<TChar, int64_t>(p_val, p_val_length, base);
 }
+
+template <typename String>
+requires requires(String value) { std::string_view(value.get_ptr(), value.length()); }
+std::string_view to_string_view(const String& value)
+{
+    return {value.get_ptr(), value.length()};
+}
+
+std::wstring to_utf16(std::string_view utf8_value);
+
 } // namespace mmh
