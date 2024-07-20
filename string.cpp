@@ -237,4 +237,17 @@ std::wstring to_utf16(std::string_view utf8_value)
     return utf16_value;
 }
 
+std::string to_utf8(std::wstring_view utf16_value)
+{
+    const auto utf8_estimated_size = pfc::stringcvt::estimate_wide_to_utf8(utf16_value.data(), utf16_value.size());
+    std::string utf8_value;
+    utf8_value.resize(utf8_estimated_size);
+
+    const auto utf8_actual_size = pfc::stringcvt::convert_wide_to_utf8(
+        utf8_value.data(), utf8_estimated_size, utf16_value.data(), utf16_value.size());
+    utf8_value.resize(utf8_actual_size);
+
+    return utf8_value;
+}
+
 } // namespace mmh
