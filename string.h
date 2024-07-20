@@ -136,5 +136,6 @@ std::string_view to_string_view(const String& value)
 }
 
 std::wstring to_utf16(std::string_view utf8_value);
+std::string to_utf8(std::wstring_view utf16_value);
 
 } // namespace mmh
