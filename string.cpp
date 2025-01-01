@@ -90,60 +90,6 @@ char format_digit(unsigned p_val)
     return (p_val < 10) ? p_val + '0' : p_val - 10 + 'A';
 }
 
-UIntegerNaturalFormatter::UIntegerNaturalFormatter(t_uint64 p_val, unsigned p_width, unsigned p_base) : m_value(p_val)
-{
-    enum {
-        max_width = tabsize(m_buffer) - 1
-    };
-
-    if (p_val < 10) {
-        if (p_val == 0)
-            strcpy_s(m_buffer, "zero");
-        else if (p_val == 1)
-            strcpy_s(m_buffer, "one");
-        else if (p_val == 2)
-            strcpy_s(m_buffer, "two");
-        else if (p_val == 3)
-            strcpy_s(m_buffer, "three");
-        else if (p_val == 4)
-            strcpy_s(m_buffer, "four");
-        else if (p_val == 5)
-            strcpy_s(m_buffer, "five");
-        else if (p_val == 6)
-            strcpy_s(m_buffer, "six");
-        else if (p_val == 7)
-            strcpy_s(m_buffer, "seven");
-        else if (p_val == 8)
-            strcpy_s(m_buffer, "eight");
-        else if (p_val == 9)
-            strcpy_s(m_buffer, "nine");
-    } else {
-        if (p_width > max_width)
-            p_width = max_width;
-        else if (p_width == 0)
-            p_width = 1;
-
-        char temp[max_width];
-
-        unsigned n;
-        for (n = 0; n < max_width; n++) {
-            temp[max_width - 1 - n] = format_digit((unsigned)(p_val % p_base));
-            p_val /= p_base;
-        }
-
-        for (n = 0; n < max_width && temp[n] == '0'; n++) {}
-
-        if (n > max_width - p_width)
-            n = max_width - p_width;
-
-        char* out = m_buffer;
-
-        for (; n < max_width; n++)
-            *(out++) = temp[n];
-        *out = 0;
-    }
-}
-
 FileSizeFormatter::FileSizeFormatter(t_uint64 size)
 {
     t_uint64 scale = 1024;

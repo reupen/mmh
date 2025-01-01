@@ -26,19 +26,6 @@ private:
     t_uint64 m_scale;
 };
 
-class UIntegerNaturalFormatter {
-public:
-    UIntegerNaturalFormatter(t_uint64 p_val, unsigned p_width = 0, unsigned p_base = 10);
-    const char* get_ptr() const { return m_buffer; }
-    const char* toString() const { return m_buffer; }
-    operator const char*() const { return m_buffer; }
-    bool is_plural() { return m_value != 1; }
-
-private:
-    char m_buffer[64];
-    t_uint64 m_value;
-};
-
 const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
 const char* convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
 

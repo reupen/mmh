@@ -1,31 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="SHA-1">
-      <UniqueIdentifier>{d21b1dfa-d07b-47d1-90bc-089e8b75a643}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="sha1.cpp">
-      <Filter>SHA-1</Filter>
-    </ClCompile>
     <ClCompile Include="osversion.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="string.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sha1.h">
-      <Filter>SHA-1</Filter>
-    </ClInclude>
     <ClInclude Include="comptr.h" />
-    <ClInclude Include="exception.h" />
     <ClInclude Include="osversion.h" />
-    <ClInclude Include="rand.h" />
     <ClInclude Include="sort.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
-    <ClInclude Include="module.h" />
     <ClInclude Include="algorithm.h" />
     <ClInclude Include="functional.h" />
     <ClInclude Include="pfc_interop.h" />
