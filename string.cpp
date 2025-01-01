@@ -14,7 +14,7 @@ const char* literals::pcc::operator""_pcc(const char8_t* str, size_t)
     return reinterpret_cast<const char*>(str);
 }
 
-IntegerFormatter::IntegerFormatter(t_uint64 size)
+std::string format_integer(t_uint64 size)
 {
     // Calculate number of digits safely.
     t_size digits = 0;
@@ -37,7 +37,8 @@ IntegerFormatter::IntegerFormatter(t_uint64 size)
 
     t_size separators = (digits - 1) / 3;
 
-    pfc::string_buffer buffer(*this, digits + separators * separator_len);
+    std::string buffer;
+    buffer.resize(digits + separators * separator_len);
 
     t_size pos = digits + separators * separator_len - 1;
     size_temp = size;
@@ -53,6 +54,8 @@ IntegerFormatter::IntegerFormatter(t_uint64 size)
         }
         pos--;
     }
+
+    return buffer;
 }
 
 const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out)
@@ -90,12 +93,12 @@ char format_digit(unsigned p_val)
     return (p_val < 10) ? p_val + '0' : p_val - 10 + 'A';
 }
 
-FileSizeFormatter::FileSizeFormatter(t_uint64 size)
+std::string format_file_size(uint64_t size)
 {
     t_uint64 scale = 1024;
     const char* unit = "kB";
     const char* const unitTable[] = {"B", "kB", "MB", "GB", "TB"};
-    for (t_size walk = 2; walk < tabsize(unitTable); ++walk) {
+    for (t_size walk = 2; walk < std::size(unitTable); ++walk) {
         t_uint64 next = scale * 1024;
         if (size < next)
             break;
@@ -133,16 +136,19 @@ FileSizeFormatter::FileSizeFormatter(t_uint64 size)
     } else if ((remainder / power_of_ten(max_remainder_digits - 1)) >= 5)
         major++;
 
-    *this << major;
+    std::string result = pfc::format_uint(major).c_str();
+
     if (b_minor) {
         WCHAR separator[4] = {'.', 0, 0, 0};
         GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, separator, tabsize(separator));
-        *this << pfc::stringcvt::string_utf8_from_wide(separator, tabsize(separator))
-              << pfc::format_uint(minor, minor_digits);
+
+        result += to_utf8({separator, std::size(separator)});
+        result += pfc::format_uint(minor, minor_digits);
     }
 
-    *this << " " << unit;
-    m_scale = scale;
+    result += " ";
+    result += unit;
+    return result;
 }
 
 int compare_string_partial_case_insensitive(const char* str, const char* substr)

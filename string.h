@@ -12,19 +12,9 @@ const char* operator"" _pcc(const char8_t* str, size_t);
  * Note: GetNumberFormat is not used as it will format with decimal places (unless a custom
  * NUMBERFMT is passed, which means bypassing the user's own settings anyway).
  */
-class IntegerFormatter : public pfc::string_formatter {
-public:
-    IntegerFormatter(t_uint64 size);
-};
+std::string format_integer(uint64_t value);
 
-class FileSizeFormatter : public pfc::string_formatter {
-public:
-    FileSizeFormatter(t_uint64 size);
-    t_uint64 get_used_scale() const { return m_scale; }
-
-private:
-    t_uint64 m_scale;
-};
+std::string format_file_size(uint64_t size);
 
 const char* convert_utf16_to_ascii(const WCHAR* str_utf16, t_size len, pfc::string_base& p_out);
 const char* convert_utf8_to_ascii(const char* p_source, pfc::string_base& p_out);
