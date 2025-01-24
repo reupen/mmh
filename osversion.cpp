@@ -1,23 +1,23 @@
 #include "stdafx.h"
 
 namespace mmh {
+
+bool is_windows_10_or_newer()
+{
+    static auto result = IsWindows10OrGreater();
+    return result;
+}
+
 bool is_windows_7_or_newer()
 {
-    static bool ret = IsWindows7OrGreater();
-    return ret;
+    static bool result = IsWindows7OrGreater();
+    return result;
 }
+
 bool is_windows_vista_or_newer()
 {
-    static bool ret = IsWindowsVistaOrGreater();
-    return ret;
+    static bool result = IsWindowsVistaOrGreater();
+    return result;
 }
-bool is_windows_xp_or_newer()
-{
-    static bool ret = IsWindowsXPOrGreater();
-    return ret;
-}
-bool test_osversion(WORD major, WORD minor, WORD sp)
-{
-    return IsWindowsVersionOrGreater(major, minor, sp);
-}
+
 } // namespace mmh
