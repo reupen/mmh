@@ -14,6 +14,8 @@
 #include <windows.h>
 #include <VersionHelpers.h>
 
+#include <wil/win32_helpers.h>
+
 #include "algorithm.h"
 #include "pfc_interop.h"
 
