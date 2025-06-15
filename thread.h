@@ -55,4 +55,6 @@ private:
     int m_priority;
 };
 
+HRESULT set_thread_description(HANDLE thread, PCWSTR thread_description);
+
 } // namespace mmh
