@@ -8,6 +8,12 @@ bool is_windows_10_or_newer()
     return result;
 }
 
+bool is_windows_8_or_newer()
+{
+    static bool result = IsWindows8OrGreater();
+    return result;
+}
+
 bool is_windows_7_or_newer()
 {
     static bool result = IsWindows7OrGreater();
