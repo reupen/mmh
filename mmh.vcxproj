@@ -177,6 +177,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="thread.cpp" />
+    <ClCompile Include="wil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.h" />
@@ -188,8 +189,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
-    <ClInclude Include="type_traits.h" />
     <ClInclude Include="utility.h" />
+    <ClInclude Include="wil.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\pfc\pfc.vcxproj">

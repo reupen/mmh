@@ -31,3 +31,4 @@
 #include "thread.h"
 #include "comptr.h"
 #include "utility.h"
+#include "wil.h"
