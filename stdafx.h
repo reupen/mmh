@@ -5,6 +5,7 @@
 #endif
 
 #include <algorithm>
+#include <format>
 #include <numeric>
 
 #include <assert.h>
@@ -32,3 +33,4 @@
 #include "comptr.h"
 #include "utility.h"
 #include "wil.h"
+#include "win32.h"
