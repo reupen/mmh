@@ -178,6 +178,7 @@
     </ClCompile>
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="wil.cpp" />
+    <ClCompile Include="win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="thread.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="wil.h" />
+    <ClInclude Include="win32.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\pfc\pfc.vcxproj">
