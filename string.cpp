@@ -151,55 +151,48 @@ std::string format_file_size(uint64_t size)
     return result;
 }
 
-int compare_string_partial_case_insensitive(const char* str, const char* substr)
+void to_utf16(std::string_view utf8_value, std::wstring& output)
 {
-    for (;;) {
-        uint32_t char1{};
-        uint32_t char2{};
+    const auto utf16_estimated_size = pfc::stringcvt::estimate_utf8_to_wide(utf8_value.data(), utf8_value.size());
+    output.resize(utf16_estimated_size);
 
-        const auto dec_bytes_1 = pfc::utf8_decode_char(str, char1);
-        const auto dec_bytes_2 = pfc::utf8_decode_char(substr, char2);
-
-        char1 = pfc::charLower(char1);
-        char2 = pfc::charLower(char2);
-
-        if (char2 == 0)
-            return 0;
-        if (char1 < char2)
-            return -1;
-        if (char1 > char2)
-            return 1;
-        // Carry on, as char1 == char2, and char2 != 0
-
-        str += dec_bytes_1;
-        substr += dec_bytes_2;
-    }
+    const auto utf16_actual_size = pfc::stringcvt::convert_utf8_to_wide(
+        output.data(), utf16_estimated_size, utf8_value.data(), utf8_value.size());
+    output.resize(utf16_actual_size);
 }
 
 std::wstring to_utf16(std::string_view utf8_value)
 {
-    const auto utf16_estimated_size = pfc::stringcvt::estimate_utf8_to_wide(utf8_value.data(), utf8_value.size());
     std::wstring utf16_value;
-    utf16_value.resize(utf16_estimated_size);
-
-    const auto utf16_actual_size = pfc::stringcvt::convert_utf8_to_wide(
-        utf16_value.data(), utf16_estimated_size, utf8_value.data(), utf8_value.size());
-    utf16_value.resize(utf16_actual_size);
-
+    to_utf16(utf8_value, utf16_value);
     return utf16_value;
+}
+
+void to_utf8(std::wstring_view utf16_value, std::string& output)
+{
+    const auto utf8_estimated_size = pfc::stringcvt::estimate_wide_to_utf8(utf16_value.data(), utf16_value.size());
+    output.resize(utf8_estimated_size);
+
+    const auto utf8_actual_size = pfc::stringcvt::convert_wide_to_utf8(
+        output.data(), utf8_estimated_size, utf16_value.data(), utf16_value.size());
+    output.resize(utf8_actual_size);
 }
 
 std::string to_utf8(std::wstring_view utf16_value)
 {
-    const auto utf8_estimated_size = pfc::stringcvt::estimate_wide_to_utf8(utf16_value.data(), utf16_value.size());
     std::string utf8_value;
-    utf8_value.resize(utf8_estimated_size);
-
-    const auto utf8_actual_size = pfc::stringcvt::convert_wide_to_utf8(
-        utf8_value.data(), utf8_estimated_size, utf16_value.data(), utf16_value.size());
-    utf8_value.resize(utf8_actual_size);
-
+    to_utf8(utf16_value, utf8_value);
     return utf8_value;
+}
+
+bool search_starts_with(std::wstring_view prefix_to_find, std::wstring_view string_to_search, bool ignore_symbols)
+{
+    return FindNLSStringEx(LOCALE_NAME_USER_DEFAULT,
+               FIND_STARTSWITH | LINGUISTIC_IGNOREDIACRITIC | NORM_IGNORECASE | NORM_IGNOREWIDTH
+                   | (ignore_symbols ? NORM_IGNORESYMBOLS : 0) | NORM_LINGUISTIC_CASING,
+               string_to_search.data(), gsl::narrow<int>(string_to_search.size()), prefix_to_find.data(),
+               gsl::narrow<int>(prefix_to_find.size()), nullptr, nullptr, nullptr, 0)
+        >= 0;
 }
 
 } // namespace mmh
