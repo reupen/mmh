@@ -23,6 +23,7 @@
 
 #include "algorithm.h"
 #include "pfc_interop.h"
+#include "event_token.h"
 
 #include "osversion.h"
 #include "exception.h"

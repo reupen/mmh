@@ -20,6 +20,7 @@
     <ClInclude Include="utility.h" />
     <ClInclude Include="wil.h" />
     <ClInclude Include="win32.h" />
+    <ClInclude Include="event_token.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

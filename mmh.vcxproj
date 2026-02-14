@@ -182,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.h" />
+    <ClInclude Include="event_token.h" />
     <ClInclude Include="functional.h" />
     <ClInclude Include="pfc_interop.h" />
     <ClInclude Include="osversion.h" />
