@@ -23,6 +23,7 @@
 
 #include "algorithm.h"
 #include "pfc_interop.h"
+#include "event_token.h"
 
 #include "osversion.h"
 #include "exception.h"
@@ -30,7 +31,6 @@
 #include "sort.h"
 #include "string.h"
 #include "thread.h"
-#include "comptr.h"
 #include "utility.h"
 #include "wil.h"
 #include "win32.h"
