@@ -30,7 +30,6 @@
 #include "sort.h"
 #include "string.h"
 #include "thread.h"
-#include "comptr.h"
 #include "utility.h"
 #include "wil.h"
 #include "win32.h"
