@@ -4,7 +4,7 @@ namespace mmh {
 
 namespace literals::pcc {
 
-const char* operator"" _pcc(const char8_t* str, size_t);
+const char* operator""_pcc(const char8_t* str, size_t);
 
 } // namespace literals::pcc
 
