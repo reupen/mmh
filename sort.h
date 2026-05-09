@@ -57,6 +57,9 @@ private:
     Storage m_data;
 };
 
+std::vector<size_t> create_permutation(size_t size);
+void fill_identity_permutation(std::span<size_t> permutation);
+
 template <typename List>
 void destructive_reorder(List& items, mmh::Permutation& perm)
 {
@@ -131,6 +134,23 @@ void sort_get_permutation(List&& p_items, Permutation& p_out, Comparator&& p_com
     }
 }
 
+// permutation must be initialised with a valid permutation e.g. the identity permutation
+template <typename List, typename Comparator>
+void sort_get_permutation(List&& p_items, std::span<size_t> permutation, Comparator&& p_compare, bool stabilise,
+    bool b_reverse = false, bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
+{
+    if (allow_parallelisation && permutation.size() >= parallel_chunk_size) {
+        IndexComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse, stabilise);
+        concurrency::parallel_buffered_sort(permutation.begin(), permutation.end(), p_context, parallel_chunk_size);
+    } else {
+        IndexComparatorWrapper<List, Comparator> p_context(p_items, p_compare, b_reverse);
+        if (stabilise)
+            std::stable_sort(permutation.begin(), permutation.end(), p_context);
+        else
+            std::sort(permutation.begin(), permutation.end(), p_context);
+    }
+}
+
 template <typename List, typename Comparator>
 void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool reverse = false,
     bool allow_parallelisation = false, size_t parallel_chunk_size = 512)
@@ -139,7 +159,6 @@ void in_place_sort(List&& items, Comparator&& comparator, bool stabilise, bool r
     auto* out_ptr = get_container_data(items);
     ComparatorWrapper<Comparator> p_context(comparator, reverse);
     if (!stabilise && allow_parallelisation && psize >= parallel_chunk_size) {
-        // C++17 has parallel sort, but it is not implemented in VC2017 yet.
         concurrency::parallel_buffered_sort(out_ptr, out_ptr + psize, p_context, parallel_chunk_size);
     } else {
         if (stabilise)
