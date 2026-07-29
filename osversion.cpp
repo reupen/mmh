@@ -30,18 +30,6 @@ bool is_windows_8_or_newer()
     return result;
 }
 
-bool is_windows_7_or_newer()
-{
-    static bool result = IsWindows7OrGreater();
-    return result;
-}
-
-bool is_windows_vista_or_newer()
-{
-    static bool result = IsWindowsVistaOrGreater();
-    return result;
-}
-
 bool is_wine()
 {
     static bool result = [] {
