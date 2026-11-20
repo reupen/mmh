@@ -8,7 +8,7 @@ struct GUIDHasher {
         const auto hashes = {std::hash<unsigned long>()(value.Data1), std::hash<unsigned short>()(value.Data2),
             std::hash<unsigned short>()(value.Data3),
             std::hash<uint64_t>()(*reinterpret_cast<const uint64_t*>(&value.Data4[0]))};
-        return std::accumulate(hashes.begin(), hashes.end(), size_t{}, std::bit_xor<>());
+        return std::accumulate(hashes.begin(), hashes.end(), 0uz, std::bit_xor<>());
     }
 };
 

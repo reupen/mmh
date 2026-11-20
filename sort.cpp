@@ -11,7 +11,7 @@ std::vector<size_t> create_permutation(size_t size)
 
 void fill_identity_permutation(std::span<size_t> permutation)
 {
-    std::iota(permutation.begin(), permutation.end(), size_t{});
+    std::iota(permutation.begin(), permutation.end(), 0uz);
 }
 
 } // namespace mmh
